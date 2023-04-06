@@ -1,0 +1,49 @@
+{% extends 'front.html.twig' %}
+
+
+
+{% block body %}
+
+
+    <div class="service">
+        <div class="container">
+            <div class="section-header text-center">
+              <div id="google_translate_element"></div>
+
+                <h4 style="margin-top:50px; margin-bottom:50px;">Liste des Evenements</h4>
+            </div>
+            <div class="row">
+           {% for evenement in evenements %}
+        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="service-item">
+         
+          <center><h2>{{ evenement.titre }}</h2></center>
+          <p><strong style="color:#696969"> Description:</strong> {{ evenement.description }}</p>
+          <p><strong style="color:#696969" >Nom societe:</strong> {{ evenement.ids.noms }}</p>
+ <td>
+                    <a href="{{ path('app_evenement_show', {'ide': evenement.ide}) }}">show</a>
+                    <a href="{{ path('app_evenement_edit', {'ide': evenement.ide}) }}">edit</a>
+                </td>
+         <br>
+         <br>
+         {# -------------------------- Share ------------------------------------  #}
+         <div class="sharethis-inline-share-buttons"></div>
+         {# -------------------------- Share ------------------------------------  #}
+
+        </div>
+      </div>
+      {% else %}
+      <div class="col">
+        <p class="text-center">Aucun événement trouvé.</p>
+      </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+    <br>
+    
+ <a href="{{ path('app_evenement_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'front.html.twig' %}
+
+
+
+{% block body %}
+
+
+    <div class="service">
+        <div class="container">
+            <div class="section-header text-center">
+              <div id="google_translate_element"></div>
+
+                <h4 style="margin-top:50px; margin-bottom:50px;">Liste des Annonces</h4>
+            </div>
+            <div class="row">
+           {% for annonces in annonces %}
+        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="service-item">
+         
+          <center><h2>{{ annonces.noms }}</h2></center>
+          <p><strong style="color:#696969"> Email:</strong> {{ annonces.emails }}</p>
+          <p><strong style="color:#696969" >Numero:</strong> {{ annonces.numeros }}</p>
+         <p><strong style="color:#696969" >Adresse:</strong> {{ annonces.adresses }}</p>
+
+ <td>
+                    <a href="{{ path('app_annonces_show', {'ids': annonces.ids}) }}"class = "btn btn-primary px-3 py-1"> show </a>
+                    <a href="{{ path('app_annonces_edit', {'ids': annonces.ids}) }}">edit</a>
+                </td>
+         <br>
+         <br>
+         {# -------------------------- Share ------------------------------------  #}
+         <div class="sharethis-inline-share-buttons"></div>
+         {# -------------------------- Share ------------------------------------  #}
+
+        </div>
+      </div>
+      {% else %}
+      <div class="col">
+        <p class="text-center">Aucun annonces trouvé.</p>
+      </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+    <br>
+    
+ <a href="{{ path('app_annonces_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Evenement index{% endblock %}
+
+{% block body %}
+    <h1>Evenement index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ide</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Nomss</th>
+               {# <th>Nomevenement</th> #}
+
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for evenement in evenements %}
+            <tr>
+                <td>{{ evenement.ide }}</td>
+                <td>{{ evenement.titre }}</td>
+                <td>{{ evenement.description }}</td>
+                <td>{{ evenement.nomss }}</td>
+                {# <td>{{ evenement.ids }}</td>#}
+
+                <td>
+                                          {{ include('evenement/_deletteback_form.html.twig') }}
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
