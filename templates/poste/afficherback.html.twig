@@ -1,0 +1,43 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Poste index{% endblock %}
+
+{% block body %}
+    <h1>Poste index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Idp</th>
+                <th>Nomp</th>
+                <th>Domaine</th>
+                <th>Descp</th>
+                <th>Emailp</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for poste in postes %}
+            <tr>
+                <td>{{ poste.idp }}</td>
+                <td>{{ poste.nomp }}</td>
+                <td>{{ poste.domaine }}</td>
+                <td>{{ poste.descp }}</td>
+                <td>{{ poste.emailp }}</td>
+                <td>
+                    {{ include('poste/_delete_backform.html.twig') }}
+                    
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    
+{% endblock %}
+
+

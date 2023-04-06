@@ -1,0 +1,41 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Poste index{% endblock %}
+
+{% block body %}
+    <h1>Poste index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Idp</th>
+                <th>Nomp</th>
+                <th>Domaine</th>
+                <th>Descp</th>
+                <th>Emailp</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for poste in postes %}
+            <tr>
+                <td>{{ poste.idp }}</td>
+                <td>{{ poste.nomp }}</td>
+                <td>{{ poste.domaine }}</td>
+                <td>{{ poste.descp }}</td>
+                <td>{{ poste.emailp }}</td>
+                <td>
+                    <a href="{{ path('app_poste_show', {'idp': poste.idp}) }}">show</a>
+                    <a href="{{ path('app_poste_edit', {'idp': poste.idp}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_poste_new') }}">Create new</a>
+{% endblock %}
