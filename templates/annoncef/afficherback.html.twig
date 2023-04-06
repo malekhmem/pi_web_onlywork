@@ -1,0 +1,39 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Annoncef index{% endblock %}
+
+{% block body %}
+    <h1>Annoncef index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Idf</th>
+                <th>Nomf</th>
+                <th>Adresse</th>
+                <th>Emailf</th>
+                <th>Descf</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for annoncef in annoncefs %}
+            <tr>
+                <td>{{ annoncef.idf }}</td>
+                <td>{{ annoncef.nomf }}</td>
+                <td>{{ annoncef.adresse }}</td>
+                <td>{{ annoncef.emailf }}</td>
+                <td>{{ annoncef.descf }}</td>
+                <td>
+                   {{ include('annoncef/_deleteback_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

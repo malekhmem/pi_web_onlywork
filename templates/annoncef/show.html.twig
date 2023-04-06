@@ -1,0 +1,38 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Annoncef{% endblock %}
+
+{% block body %}
+    <h1>Annoncef</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idf</th>
+                <td>{{ annoncef.idf }}</td>
+            </tr>
+            <tr>
+                <th>Nomf</th>
+                <td>{{ annoncef.nomf }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ annoncef.adresse }}</td>
+            </tr>
+            <tr>
+                <th>Emailf</th>
+                <td>{{ annoncef.emailf }}</td>
+            </tr>
+            <tr>
+                <th>Descf</th>
+                <td>{{ annoncef.descf }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_annoncef_index') }}">back to list</a>
+
+    <a href="{{ path('app_annoncef_edit', {'idf': annoncef.idf}) }}">edit</a>
+
+    {{ include('annoncef/_delete_form.html.twig') }}
+{% endblock %}

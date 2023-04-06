@@ -1,0 +1,42 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Materiel index{% endblock %}
+
+{% block body %}
+    <h1>Materiel index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Idm</th>
+                <th>Nomm</th>
+                <th>Marque</th>
+                <th>Prix</th>
+                <th>Descm</th>
+                <th>Image</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for materiel in materiels %}
+            <tr>
+                <td>{{ materiel.idm }}</td>
+                <td>{{ materiel.nomm }}</td>
+                <td>{{ materiel.marque }}</td>
+                <td>{{ materiel.prix }}</td>
+                <td>{{ materiel.descm }}</td>
+                <td><img src="{{ asset('img/'~ materiel.image ) }}" width="50%" height="50%"></td>
+                <td>
+                   
+                   {{ include('materiel/_deleteback_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

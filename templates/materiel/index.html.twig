@@ -1,0 +1,58 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Materiel index{% endblock %}
+
+{% block body %}
+<section class="is-hero-bar">
+		<div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+			<h1 class="title">Materiel</h1>
+		</div>
+	</section>
+
+	<div class="card has-table">
+    <h1>Materiel </h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Idm</th>
+                <th>Nomm</th>
+                <th>Marque</th>
+                <th>Prix</th>
+                <th>Descm</th>
+                <th stye="width:250px">Image</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for materiel in materiels %}
+            <tr>
+                <td>{{ materiel.idm }}</td>
+                <td>{{ materiel.nomm }}</td>
+                <td>{{ materiel.marque }}</td>
+                <td>{{ materiel.prix }}</td>
+                <td>{{ materiel.descm }}</td>
+                {# <td>{{ materiel.image }}</td> #}
+                <td><img src="{{ asset('img/'~ materiel.image ) }}" width="50%" height="50%"></td>
+                <td>
+                
+
+                    <a href="{{ path('app_materiel_show', {'idm': materiel.idm}) }}">show</a>
+                   
+                    
+
+                    <a href="{{ path('app_materiel_edit', {'idm': materiel.idm}) }}">edit</a>
+                  
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_materiel_new') }}">Create new</a>
+    
+{% endblock %}

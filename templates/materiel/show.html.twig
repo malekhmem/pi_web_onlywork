@@ -1,0 +1,50 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Materiel{% endblock %}
+
+{% block body %}
+    <h1>Materiel</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idm</th>
+                <td>{{ materiel.idm }}</td>
+            </tr>
+            <tr>
+                <th>Nomm</th>
+                <td>{{ materiel.nomm }}</td>
+            </tr>
+            <tr>
+                <th>Marque</th>
+                <td>{{ materiel.marque }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ materiel.prix }}</td>
+            </tr>
+            <tr>
+                <th>Descm</th>
+                <td>{{ materiel.descm }}</td>
+            </tr>
+           {# <tr>
+                <th>Image</th>
+                <td>{{ materiel.image }}</td>
+            </tr> #}
+            <tr>
+                <th style="width:250px">Image</th>
+                <td><img src="{{ asset('img/'~ materiel.image ) }}" width="10%" height="10%">{{ materiel.image }}</td>
+            </tr>
+              <tr>
+                <th>nom annonce</th>
+                <td>{{ materiel.idff }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_materiel_index') }}">back to list</a>
+
+    <a href="{{ path('app_materiel_edit', {'idm': materiel.idm}) }}">edit</a>
+
+    {{ include('materiel/_delete_form.html.twig') }}
+{% endblock %}
