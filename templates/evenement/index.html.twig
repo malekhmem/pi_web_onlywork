@@ -16,10 +16,11 @@
            {% for evenement in evenements %}
         <div class="col-lg-4 col-md-6 mb-4">
         <div class="service-item">
-         
+          <td><img src="{{ asset('uploads/' ~evenement.imagee) }}" style=" width:350px; height:350px; " alt=""/></td>
           <center><h2>{{ evenement.titre }}</h2></center>
           <p><strong style="color:#696969"> Description:</strong> {{ evenement.description }}</p>
           <p><strong style="color:#696969" >Nom societe:</strong> {{ evenement.ids.noms }}</p>
+          <p><strong style="color:#696969">Date de fin:</strong> {{ evenement.datee ? evenement.datee|date('Y-m-d') : '' }}</p>
  <td>
                     <a href="{{ path('app_evenement_show', {'ide': evenement.ide}) }}">show</a>
                     <a href="{{ path('app_evenement_edit', {'ide': evenement.ide}) }}">edit</a>

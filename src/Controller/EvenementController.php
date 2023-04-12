@@ -9,10 +9,71 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\EvenementRepository;
 
 #[Route('/evenement')]
 class EvenementController extends AbstractController
 {
+    #[Route('/afficherback', name: 'app_evenement_afficherback', methods: ['GET','POST'])]
+    public function afficherback(EntityManagerInterface $entityManager ,EvenementRepository $EvenementRepository,Request $request): Response
+    {
+        $evenements = $entityManager
+            ->getRepository(Evenement::class)
+            ->findAll();
+/////////
+$back = null;
+        
+if($request->isMethod("POST")){
+    if ( $request->request->get('optionsRadios')){
+        $SortKey = $request->request->get('optionsRadios');
+        switch ($SortKey){
+            case 'nomss':
+                $evenements = $EvenementRepository->SortByNomss();
+                break;
+
+            case 'titre':
+                $evenements = $EvenementRepository->SortByTitre();
+                break;
+
+            case 'description':
+                $evenements = $EvenementRepository->SortByDescription();
+                break;
+
+
+        }
+    }
+    else
+    {
+        $type = $request->request->get('optionsearch');
+        $value = $request->request->get('Search');
+        switch ($type){
+            case 'nomss':
+                $evenements = $EvenementRepository->findBynomss($value);
+                break;
+
+            case 'titre':
+                $evenements = $EvenementRepository->findBytitre($value);
+                break;
+
+            case 'desription':
+                $evenements = $EvenementRepository->findBydescription($value);
+                break;
+
+
+        }
+    }
+
+    if ( $evenements){
+        $back = "success";
+    }else{
+        $back = "failure";
+    }
+}
+    ////////
+        return $this->render('evenement/afficherback.html.twig', [
+            'evenements' => $evenements,
+        ]);
+    }
     #[Route('/new', name: 'app_evenement_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -21,6 +82,12 @@ class EvenementController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $file = $evenement->getImagee();
+            $filename = md5(uniqid()).'.'.$file->guessExtension();
+            $file->move($this->getParameter('uploads'),$filename);
+            $evenement->setImagee($filename);
+
             $entityManager->persist($evenement);
             $entityManager->flush();
 
@@ -42,17 +109,7 @@ class EvenementController extends AbstractController
 
         return $this->redirectToRoute('app_evenement_afficherback', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/afficherback', name: 'app_evenement_afficherback', methods: ['GET'])]
-    public function afficherback(EntityManagerInterface $entityManager): Response
-    {
-        $evenements = $entityManager
-            ->getRepository(Evenement::class)
-            ->findAll();
-
-        return $this->render('evenement/afficherback.html.twig', [
-            'evenements' => $evenements,
-        ]);
-    }
+    
     #[Route('/', name: 'app_evenement_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
@@ -82,6 +139,12 @@ class EvenementController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $file = $evenement->getImagee();
+            $filename = md5(uniqid()).'.'.$file->guessExtension();
+            $file->move($this->getParameter('uploads'),$filename);
+            $evenement->setImagee($filename);
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);

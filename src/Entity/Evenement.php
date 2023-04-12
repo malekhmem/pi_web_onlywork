@@ -6,7 +6,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * Evenement
  *
@@ -30,8 +29,8 @@ class Evenement
      * @ORM\Column(name="titre", type="string", length=255, nullable=false)
      */
     #[Assert\Length(min:5)]
-    #[Assert\Length(max:25)]
-    #[Assert\NotBlank (message:"veuillez saisir le titre de l'evenement ")]
+    #[Assert\Length(max:20)]
+    #[Assert\NotBlank (message:"veuillez saisir le titre ")]
     private $titre;
 
     /**
@@ -40,8 +39,8 @@ class Evenement
      * @ORM\Column(name="description", type="text", length=65535, nullable=false)
      */
     #[Assert\Length(min:5)]
-    #[Assert\Length(max:255)]
-    #[Assert\NotBlank (message:"veuillez saisir la description de l'evenement ")]
+    #[Assert\Length(max:20)]
+    #[Assert\NotBlank (message:"veuillez saisir le description ")]
     private $description;
 
     /**
@@ -50,9 +49,25 @@ class Evenement
      * @ORM\Column(name="nomss", type="string", length=255, nullable=false)
      */
     #[Assert\Length(min:5)]
-    #[Assert\Length(max:25)]
-    #[Assert\NotBlank (message:"veuillez saisir le nom de l'annonce ")]
+    #[Assert\Length(max:20)]
+    #[Assert\NotBlank (message:"veuillez saisir le nom ")]
     private $nomss;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="datee", type="date", nullable=true)
+     */
+    #[Assert\GreaterThanOrEqual ("today", message:"La date doit être aujourd'hui ou après.")]
+    private $datee;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="imagee", type="string", length=255, nullable=true)
+     */
+    #[Assert\NotBlank (message:"veuillez saisir le image ")]
+    private $imagee;
 
     /**
      * @var \Annonces
@@ -105,6 +120,30 @@ class Evenement
         return $this;
     }
 
+    public function getDatee(): ?\DateTimeInterface
+    {
+        return $this->datee;
+    }
+
+    public function setDatee(?\DateTimeInterface $datee): self
+    {
+        $this->datee = $datee;
+
+        return $this;
+    }
+
+    public function getImagee()
+    {
+        return $this->imagee;
+    }
+
+    public function setImagee( $imagee)
+    {
+        $this->imagee = $imagee;
+
+        return $this;
+    }
+
     public function getIds(): ?Annonces
     {
         return $this->ids;
@@ -117,5 +156,9 @@ class Evenement
         return $this;
     }
 
+    public function __construct()
+    {
+        $this->datee = new \DateTime('now');
+    }
 
 }

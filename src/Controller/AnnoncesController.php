@@ -82,7 +82,7 @@ if($request->isMethod("POST")){
             ->findAll();
 
         return $this->render('annonces/index.html.twig', [
-            'annonces' => $annonces,'back'=>$back,
+            'annonces' => $annonces,
         ]);
     }
    

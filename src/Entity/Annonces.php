@@ -10,7 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="annonces", indexes={@ORM\Index(name="fk_util", columns={"idu"})})
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\AnnoncesRepository")
  */
 class Annonces
 {
@@ -29,8 +28,8 @@ class Annonces
      * @ORM\Column(name="noms", type="string", length=255, nullable=false)
      */
     #[Assert\Length(min:5)]
-    #[Assert\Length(max:25)]
-    #[Assert\NotBlank (message:"veuillez saisir le nom de l'annonce ")]
+    #[Assert\Length(max:20)]
+    #[Assert\NotBlank (message:"veuillez saisir le nom ")]
     private $noms;
 
     /**
@@ -38,7 +37,7 @@ class Annonces
      *
      * @ORM\Column(name="emails", type="string", length=255, nullable=false)
      */
-    #[Assert\NotBlank (message:"veuillez saisir l'email ")]
+    #[Assert\NotBlank (message:"veuillez saisir l email ")]
     #[Assert\Email]
     private $emails;
 
@@ -47,9 +46,9 @@ class Annonces
      *
      * @ORM\Column(name="numeros", type="integer", nullable=false)
      */
-    #[Assert\Length(min:7)]
+    #[Assert\Length(min:6)]
     #[Assert\Length(max:8)]
-    #[Assert\NotBlank (message:"veuillez saisir le numero de l'annonce ")]
+    #[Assert\NotBlank (message:"veuillez saisir le numero ")]
     private $numeros;
 
     /**
@@ -58,8 +57,8 @@ class Annonces
      * @ORM\Column(name="adresses", type="string", length=255, nullable=true)
      */
     #[Assert\Length(min:5)]
-    #[Assert\Length(max:30)]
-    #[Assert\NotBlank (message:"veuillez saisir l'adresse de l'annonce ")]
+    #[Assert\Length(max:20)]
+    #[Assert\NotBlank (message:"veuillez saisir l addresse ")]
     private $adresses;
 
     /**
@@ -137,9 +136,5 @@ class Annonces
         return $this;
     }
 
-    public function __toString()
-    {
-        return (string) $this->getIds();
-    }
-        
+
 }
