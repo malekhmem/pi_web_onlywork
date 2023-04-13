@@ -24,6 +24,16 @@ class PosteController extends AbstractController
             'postes' => $postes,
         ]);
     }
+    #[Route('/{idp}', name: 'app_poste_delete', methods: ['POST'])]
+    public function delete(Request $request, Poste $poste, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$poste->getIdp(), $request->request->get('_token'))) {
+            $entityManager->remove($poste);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_poste_index', [], Response::HTTP_SEE_OTHER);
+    }
     #[Route('/afficherback', name: 'app_poste_afficherback', methods: ['GET'])]
     public function afficherback(EntityManagerInterface $entityManager): Response
     {
@@ -46,7 +56,7 @@ class PosteController extends AbstractController
         return $this->redirectToRoute('app_poste_afficherback', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/new', name: 'app_poste_new', methods: ['GET', 'POST'])]
+    #[Route('/new/a', name: 'app_poste_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $poste = new Poste();
@@ -92,15 +102,6 @@ class PosteController extends AbstractController
         ]);
     }
 
-    #[Route('/{idp}', name: 'app_poste_delete', methods: ['POST'])]
-    public function delete(Request $request, Poste $poste, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$poste->getIdp(), $request->request->get('_token'))) {
-            $entityManager->remove($poste);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_poste_index', [], Response::HTTP_SEE_OTHER);
-    }
+  
     
 }

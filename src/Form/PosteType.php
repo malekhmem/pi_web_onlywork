@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Poste;
+use App\Entity\Categorie;
+use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,8 +23,12 @@ class PosteType extends AbstractType
             ->add('domaine',TextType::class,['attr' =>['style' => 'color :rgb(64,0,64);border:1px solid black;width:500px;margin-left:155px;margin-top:20px'],'label' => 'domaine','label_attr'=>['style'=>'font-weight:bold']])
             ->add('descp',TextType::class,['attr' =>['style' => 'color :rgb(64,0,64);border:1px solid black;width:500px;margin-left:140px;margin-top:20px'],'label' => 'description','label_attr'=>['style'=>'font-weight:bold']])
             ->add('emailp',TextType::class,['attr' =>['style' => 'color :rgb(64,0,64);border:1px solid black;width:500px;margin-left:182px;margin-top:20px'],'label' => 'email','label_attr'=>['style'=>'font-weight:bold']])
-            ->add('idcc')
-            ->add('idu')
+            ->add('idcc',EntityType::class,['class'=> Categorie::class,
+            'choice_label'=>'nomc',
+            'label'=>'nom categorie'])
+            ->add('idu',EntityType::class,['class'=> Utilisateur::class,
+            'choice_label'=>'nom',
+            'label'=>'nom utilisateur'])
         ;
     }
 

@@ -1,25 +1,24 @@
 {% extends 'front.html.twig' %}
 
-{% block title %}Poste index{% endblock %}
+{% block title %}Poste{% endblock %}
 
 {% block body %}
-    <h1>Poste index</h1>
+    <h1>Poste</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Idp</th>
                 <th>Nomp</th>
                 <th>Domaine</th>
                 <th>Descp</th>
                 <th>Emailp</th>
-                <th>actions</th>
+                
             </tr>
         </thead>
         <tbody>
         {% for poste in postes %}
             <tr>
-                <td>{{ poste.idp }}</td>
+                {#<td>{{ poste.idp }}</td>#}
                 <td>{{ poste.nomp }}</td>
                 <td>{{ poste.domaine }}</td>
                 <td>{{ poste.descp }}</td>
