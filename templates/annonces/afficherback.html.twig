@@ -1,0 +1,40 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Annonces index{% endblock %}
+
+{% block body %}
+    <h1>Annonces index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ids</th>
+                <th>Noms</th>
+                <th>Emails</th>
+                <th>Numeros</th>
+                <th>Adresses</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for annonce in annonces %}
+            <tr>
+                <td>{{ annonce.ids }}</td>
+                <td>{{ annonce.noms }}</td>
+                <td>{{ annonce.emails }}</td>
+                <td>{{ annonce.numeros }}</td>
+                <td>{{ annonce.adresses }}</td>
+                <td>
+                      {{ include('annonces/_delete_form.html.twig') }}
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

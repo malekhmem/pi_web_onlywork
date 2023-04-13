@@ -1,0 +1,41 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Reclamation {% endblock %}
+
+{% block body %}
+    <h1>Reclamation </h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Idr</th>
+                <th>Descr</th>
+                <th>Nomr</th>
+                <th>Emailr</th>
+                <th>Type</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reclamation in reclamations %}
+            <tr>
+                <td>{{ reclamation.idr }}</td>
+                <td>{{ reclamation.descr }}</td>
+                <td>{{ reclamation.nomr }}</td>
+                <td>{{ reclamation.emailr }}</td>
+                <td>{{ reclamation.type }}</td>
+                <td>
+                    <a href="{{ path('app_reclamation_shows', {'idr': reclamation.idr}) }}">shows</a>
+                    <a href="{{ path('app_reclamation_edits', {'idr': reclamation.idr}) }}">edits</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_reclamation_news') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Blacklist{% endblock %}
+
+{% block body %}
+    <h1>Blacklist</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idb</th>
+                <td>{{ blacklist.idb }}</td>
+            </tr>
+            <tr>
+                <th>Descb</th>
+                <td>{{ blacklist.descb }}</td>
+            </tr>
+            <tr>
+                <th>Nbrr</th>
+                <td>{{ blacklist.nbrr }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_blackliste_index') }}">back to list</a>
+
+    <a href="{{ path('app_blackliste_edit', {'idb': blacklist.idb}) }}">edit</a>
+
+    {{ include('blackliste/_delete_form.html.twig') }}
+{% endblock %}

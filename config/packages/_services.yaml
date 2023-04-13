@@ -1,0 +1,4 @@
+# config/packages/_services.yaml
+
+imports:
+    - { resource: '../services.yaml' }
