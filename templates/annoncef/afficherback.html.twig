@@ -1,14 +1,14 @@
 {% extends 'back.html.twig' %}
 
-{% block title %}Annoncef index{% endblock %}
+{% block title %}Annoncef {% endblock %}
 
 {% block body %}
-    <h1>Annoncef index</h1>
+    <h1>Annoncef </h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Idf</th>
+            
                 <th>Nomf</th>
                 <th>Adresse</th>
                 <th>Emailf</th>
@@ -19,7 +19,7 @@
         <tbody>
         {% for annoncef in annoncefs %}
             <tr>
-                <td>{{ annoncef.idf }}</td>
+             
                 <td>{{ annoncef.nomf }}</td>
                 <td>{{ annoncef.adresse }}</td>
                 <td>{{ annoncef.emailf }}</td>

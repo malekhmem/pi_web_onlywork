@@ -27,7 +27,7 @@ class Annoncef
      *
      * @ORM\Column(name="nomf", type="string", length=255, nullable=false)
      */
-    #[Assert\Length(min:5)]
+    #[Assert\Length(min:2)]
     #[Assert\Length(max:25)]
     #[Assert\NotBlank (message:"veuillez saisir le nom de l'annonce ")]
     private $nomf;
@@ -37,7 +37,7 @@ class Annoncef
      *
      * @ORM\Column(name="adresse", type="string", length=255, nullable=false)
      */
-    #[Assert\Length(min:5)]
+    #[Assert\Length(min:3)]
     #[Assert\Length(max:30)]
     #[Assert\NotBlank (message:"veuillez saisir l'adresse de l'annonce ")]
     private $adresse;

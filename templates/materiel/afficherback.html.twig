@@ -1,26 +1,26 @@
 {% extends 'back.html.twig' %}
 
-{% block title %}Materiel index{% endblock %}
+{% block title %}Materiel{% endblock %}
 
 {% block body %}
-    <h1>Materiel index</h1>
+    <h1>Materiel </h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Idm</th>
+                
                 <th>Nomm</th>
                 <th>Marque</th>
                 <th>Prix</th>
                 <th>Descm</th>
                 <th>Image</th>
-                <th>actions</th>
+              
             </tr>
         </thead>
         <tbody>
         {% for materiel in materiels %}
             <tr>
-                <td>{{ materiel.idm }}</td>
+               
                 <td>{{ materiel.nomm }}</td>
                 <td>{{ materiel.marque }}</td>
                 <td>{{ materiel.prix }}</td>

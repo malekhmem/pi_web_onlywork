@@ -24,6 +24,16 @@ class AnnoncefController extends AbstractController
             'annoncefs' => $annoncefs,
         ]);
     }
+    #[Route('/{idf}', name: 'app_annoncef_delete', methods: ['POST'])]
+    public function delete(Request $request, Annoncef $annoncef, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$annoncef->getIdf(), $request->request->get('_token'))) {
+            $entityManager->remove($annoncef);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_annoncef_index', [], Response::HTTP_SEE_OTHER);
+    }
     #[Route('/afficherback', name: 'app_annoncef_afficherback', methods: ['GET'])]
     public function afficherback(EntityManagerInterface $entityManager): Response
     {
@@ -44,7 +54,7 @@ class AnnoncefController extends AbstractController
 
         return $this->redirectToRoute('app_annoncef_afficherback', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/new', name: 'app_annoncef_new', methods: ['GET', 'POST'])]
+    #[Route('/new/na', name: 'app_annoncef_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $annoncef = new Annoncef();
@@ -90,15 +100,6 @@ class AnnoncefController extends AbstractController
         ]);
     }
 
-    #[Route('/{idf}', name: 'app_annoncef_delete', methods: ['POST'])]
-    public function delete(Request $request, Annoncef $annoncef, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$annoncef->getIdf(), $request->request->get('_token'))) {
-            $entityManager->remove($annoncef);
-            $entityManager->flush();
-        }
 
-        return $this->redirectToRoute('app_annoncef_index', [], Response::HTTP_SEE_OTHER);
-    }
 
 }

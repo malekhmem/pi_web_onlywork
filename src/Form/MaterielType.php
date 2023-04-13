@@ -3,8 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Materiel;
-#use App\Entity\Annoncef;
-#use App\Entity\Utilisateur;
+use App\Entity\Annoncef;
+use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -43,8 +43,12 @@ class MaterielType extends AbstractType
 
            # ->add('idff')
           
-           ->add('idff')
-            ->add('idu')
+           ->add('idff',EntityType::class,['class'=> Annoncef::class,
+           'choice_label'=>'nomf',
+           'label'=>'nom annonce'])
+           ->add('idu',EntityType::class,['class'=> Utilisateur::class,
+           'choice_label'=>'nom',
+           'label'=>'nom utilisateur'])
             
            
         ;

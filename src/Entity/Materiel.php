@@ -28,7 +28,7 @@ class Materiel
      *
      * @ORM\Column(name="nomm", type="string", length=255, nullable=false)
      */
-    #[Assert\Length(min:5)]
+    #[Assert\Length(min:2)]
     #[Assert\Length(max:25)]
     #[Assert\NotBlank (message:"veuillez saisir le nom de materiel ")]
     private $nomm;
@@ -38,7 +38,7 @@ class Materiel
      *
      * @ORM\Column(name="marque", type="string", length=255, nullable=false)
      */
-    #[Assert\Length(min:5)]
+    #[Assert\Length(min:2)]
     #[Assert\Length(max:25)]
     #[Assert\NotBlank (message:"veuillez saisir la marque de l'annonce ")]
     private $marque;
@@ -48,7 +48,7 @@ class Materiel
      *
      * @ORM\Column(name="prix", type="string", length=255, nullable=false)
      */
-    #[Assert\Length(min:5)]
+    #[Assert\Length(min:2)]
     #[Assert\Length(max:25)]
     #[Assert\NotBlank (message:"veuillez saisir le prix")]
     private $prix;
@@ -58,7 +58,7 @@ class Materiel
      *
      * @ORM\Column(name="descm", type="text", length=65535, nullable=false)
      */
-    #[Assert\Length(min:10)]
+    #[Assert\Length(min:5)]
     #[Assert\Length(max:100)]
     #[Assert\NotBlank (message:"veuillez saisir la description ")]
     private $descm;

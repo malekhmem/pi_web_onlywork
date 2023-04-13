@@ -27,6 +27,16 @@ class MaterielController extends AbstractController
             'materiels' => $materiels,
         ]);
     }
+    #[Route('/{idm}', name: 'app_materiel_delete', methods: ['POST'])]
+    public function delete(Request $request, Materiel $materiel, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$materiel->getIdm(), $request->request->get('_token'))) {
+            $entityManager->remove($materiel);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_materiel_index', [], Response::HTTP_SEE_OTHER);
+    }
     #[Route('/afficherback', name: 'app_materiel_afficherback', methods: ['GET'])]
     public function afficherback(EntityManagerInterface $entityManager): Response
     {
@@ -47,7 +57,7 @@ class MaterielController extends AbstractController
 
         return $this->redirectToRoute('app_materiel_afficherback', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/new', name: 'app_materiel_new', methods: ['GET', 'POST'])]
+    #[Route('/new/n', name: 'app_materiel_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,SluggerInterface $slugger): Response
     {
         $materiel = new Materiel();
@@ -140,15 +150,6 @@ class MaterielController extends AbstractController
         ]);
     }
 
-    #[Route('/{idm}', name: 'app_materiel_delete', methods: ['POST'])]
-    public function delete(Request $request, Materiel $materiel, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$materiel->getIdm(), $request->request->get('_token'))) {
-            $entityManager->remove($materiel);
-            $entityManager->flush();
-        }
 
-        return $this->redirectToRoute('app_materiel_index', [], Response::HTTP_SEE_OTHER);
-    }
 
 }
