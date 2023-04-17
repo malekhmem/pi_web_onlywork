@@ -4,6 +4,12 @@
 
 {% block body %}
 
+{% for message in app.flashes('notification') %}
+        <div class="alert alert-info alert-dismissible fade show" style="background-color:#a94442;">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    {% endfor %}
 
     <div class="service">
         <div class="container">
@@ -22,8 +28,12 @@
           <p><strong style="color:#696969" >Nom societe:</strong> {{ evenement.ids.noms }}</p>
           <p><strong style="color:#696969">Date de fin:</strong> {{ evenement.datee ? evenement.datee|date('Y-m-d') : '' }}</p>
  <td>
-                    <a href="{{ path('app_evenement_show', {'ide': evenement.ide}) }}">show</a>
-                    <a href="{{ path('app_evenement_edit', {'ide': evenement.ide}) }}">edit</a>
+                    {#<a href="{{ path('app_evenement_show', {'ide': evenement.ide}) }}">show</a>
+                    <a href="{{ path('app_evenement_edit', {'ide': evenement.ide}) }}">edit</a>#}
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_show', {'ide': evenement.ide}) }}'">Show</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_edit', {'ide': evenement.ide}) }}'">Edit</button>
+
+
                 </td>
          <br>
          <br>
@@ -46,5 +56,10 @@
     </div>
     <br>
     
- <a href="{{ path('app_evenement_new') }}">Create new</a>
+ {#<a href="{{ path('app_evenement_new') }}">Create new</a>
+  <a href="{{ path('generator_service') }}"> PDF</a>#}
+  <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_new') }}'">Create new</button>
+<button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('generator_service') }}'">PDF</button>
+
+
 {% endblock %}

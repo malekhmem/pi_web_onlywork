@@ -13,7 +13,19 @@ use App\Repository\AnnoncesRepository;
 
 #[Route('/annonces')]
 class AnnoncesController extends AbstractController
-{
+{ 
+    
+    
+    #[Route('/{ids}', name: 'app_annonces_deleteback', methods: ['POST'])]
+    public function deleteback(Request $request,  Annonces $annonce, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$annonce->getIds(), $request->request->get('_token'))) {
+            $entityManager->remove($annonce);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_annonces_back', [], Response::HTTP_SEE_OTHER);
+    }
     #[Route('/afficherback', name: 'app_annonces_back', methods: ['GET','POST'])]
     public function backafficher(EntityManagerInterface $entityManager,AnnoncesRepository $AnnoncesRepository,Request $request): Response
     {
@@ -106,16 +118,6 @@ if($request->isMethod("POST")){
             'annonce' => $annonce,
             'form' => $form,
         ]);
-    }
-    #[Route('/{ids}', name: 'app_annonces_deleteback', methods: ['POST'])]
-    public function deleteback(Request $request, Annonces $annonce, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('deleteback'.$annonce->getIds(), $request->request->get('_token'))) {
-            $entityManager->remove($annonce);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_annonces_back', [], Response::HTTP_SEE_OTHER);
     }
     
 

@@ -29,7 +29,7 @@ class Evenement
      * @ORM\Column(name="titre", type="string", length=255, nullable=false)
      */
     #[Assert\Length(min:5)]
-    #[Assert\Length(max:20)]
+    #[Assert\Length(max:30)]
     #[Assert\NotBlank (message:"veuillez saisir le titre ")]
     private $titre;
 
@@ -39,7 +39,7 @@ class Evenement
      * @ORM\Column(name="description", type="text", length=65535, nullable=false)
      */
     #[Assert\Length(min:5)]
-    #[Assert\Length(max:20)]
+    #[Assert\Length(max:200)]
     #[Assert\NotBlank (message:"veuillez saisir le description ")]
     private $description;
 
@@ -49,7 +49,7 @@ class Evenement
      * @ORM\Column(name="nomss", type="string", length=255, nullable=false)
      */
     #[Assert\Length(min:5)]
-    #[Assert\Length(max:20)]
+    #[Assert\Length(max:30)]
     #[Assert\NotBlank (message:"veuillez saisir le nom ")]
     private $nomss;
 

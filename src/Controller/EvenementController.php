@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\EvenementRepository;
+use Symfony\Component\Notifier\Notification\Notification;
+use Symfony\Component\Notifier\NotifierInterface;
+use App\Entity\PdfGeneratorService;
 
 #[Route('/evenement')]
 class EvenementController extends AbstractController
@@ -75,30 +78,43 @@ if($request->isMethod("POST")){
         ]);
     }
     #[Route('/new', name: 'app_evenement_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,NotifierInterface $notifier): Response
     {
         $evenement = new Evenement();
         $form = $this->createForm(EvenementType::class, $evenement);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+           
             $file = $evenement->getImagee();
             $filename = md5(uniqid()).'.'.$file->guessExtension();
             $file->move($this->getParameter('uploads'),$filename);
             $evenement->setImagee($filename);
 
+            
             $entityManager->persist($evenement);
+            $titre = $form->get('titre')->getData();
+            $evenements = $entityManager
+            ->getRepository(Evenement::class)
+            ->findBy(['titre'=>$titre]);
+            if (empty($evenements)) 
+           {
             $entityManager->flush();
-
+            $notifier->send(new Notification('Evenemet ajouté avec succées  ', ['browser']));
             return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
         }
+        else{
+            $notifier->send(new Notification('Evenemet exist deja  ', ['browser']));
+            return $this->redirectToRoute('app_evenement_new', [], Response::HTTP_SEE_OTHER);
 
+        }
+    }
         return $this->renderForm('evenement/new.html.twig', [
             'evenement' => $evenement,
             'form' => $form,
         ]);
     }
+
     #[Route('/{ide}', name: 'app_evenement_deletteback', methods: ['POST'])]
     public function deletteback(Request $request, Evenement $evenement, EntityManagerInterface $entityManager): Response
     {
@@ -165,6 +181,26 @@ if($request->isMethod("POST")){
         }
 
         return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/pdf/evenement', name: 'generator_service')]
+    public function pdfEvenement(): Response
+    { 
+        $evenement= $this->getDoctrine()
+        ->getRepository(Evenement::class)
+        ->findAll();
+
+   
+
+        $html =$this->renderView('pdf/index.html.twig', ['evenement' => $evenement]);
+        $pdfGeneratorService=new PdfGeneratorService();
+        $pdf = $pdfGeneratorService->generatePdf($html);
+
+        return new Response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="document.pdf"',
+        ]);
+       
     }
     
 }

@@ -28,7 +28,7 @@ class Annonces
      * @ORM\Column(name="noms", type="string", length=255, nullable=false)
      */
     #[Assert\Length(min:5)]
-    #[Assert\Length(max:20)]
+    #[Assert\Length(max:30)]
     #[Assert\NotBlank (message:"veuillez saisir le nom ")]
     private $noms;
 

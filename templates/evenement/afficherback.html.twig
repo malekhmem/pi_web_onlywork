@@ -3,6 +3,16 @@
 {% block title %}Evenement index{% endblock %}
 
 {% block body %}
+
+
+{% for message in app.flashes('notification') %}
+        <div class="alert alert-info alert-dismissible fade show" style="background-color:#a94442;">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    {% endfor %}
+
+
     <h1>Evenement index</h1>
 <div class="main-panel">
     <div class="content-wrapper">
