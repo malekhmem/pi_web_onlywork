@@ -5,14 +5,31 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
+<<<<<<< HEAD
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+=======
         users_in_memory: { memory: null }
+>>>>>>> c3f0276de4fcc57cf16fbe8e0a97e3ecdce9a53f
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
+<<<<<<< HEAD
+            provider: app_user_provider
+            custom_authenticator: App\Security\LoginFormAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+=======
             provider: users_in_memory
+>>>>>>> c3f0276de4fcc57cf16fbe8e0a97e3ecdce9a53f
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
