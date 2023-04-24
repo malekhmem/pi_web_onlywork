@@ -11,40 +11,67 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Repository\MaterielRepository;
 
 #[Route('/materiel')]
 class MaterielController extends AbstractController
 {
-
-    #[Route('/', name: 'app_materiel_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    #[Route('/afficherback', name: 'app_materiel_afficherback', methods: ['GET','POST'])]
+    public function afficherback(EntityManagerInterface $entityManager,MaterielRepository $MaterielRepository,Request $request): Response
     {
-        $materiels = $entityManager
+        $materiel = $entityManager
             ->getRepository(Materiel::class)
             ->findAll();
+            $back = null;
+        
+if($request->isMethod("POST")){
+    if ( $request->request->get('optionsRadios')){
+        $SortKey = $request->request->get('optionsRadios');
+        switch ($SortKey){
+            case 'nomm':
+                $materiel = $MaterielRepository->SortByNomm();
+                break;
 
-        return $this->render('materiel/index.html.twig', [
-            'materiels' => $materiels,
-        ]);
-    }
-    #[Route('/{idm}', name: 'app_materiel_delete', methods: ['POST'])]
-    public function delete(Request $request, Materiel $materiel, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$materiel->getIdm(), $request->request->get('_token'))) {
-            $entityManager->remove($materiel);
-            $entityManager->flush();
+            case 'marque':
+                $materiel = $MaterielRepository->SortByMarque();
+                break;
+
+            case 'prix':
+                $materiel = $MaterielRepository->SortByPrix();
+                break;
+
+
         }
-
-        return $this->redirectToRoute('app_materiel_index', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/afficherback', name: 'app_materiel_afficherback', methods: ['GET'])]
-    public function afficherback(EntityManagerInterface $entityManager): Response
+    else
     {
-        $materiels = $entityManager
-            ->getRepository(Materiel::class)
-            ->findAll();
+        $type = $request->request->get('optionsearch');
+        $value = $request->request->get('Search');
+        switch ($type){
+            case 'nomm':
+                $materiel = $MaterielRepository->findBynomm($value);
+                break;
+
+            case 'marque':
+                $materiel = $MaterielRepository->findBymarque($value);
+                break;
+
+            case 'prix':
+                $materiel = $MaterielRepository->findByprix($value);
+                break;
+
+
+        }
+    }
+
+    if ( $materiel){
+        $back = "success";
+    }else{
+        $back = "failure";
+    }
+}
         return $this->render('materiel/afficherback.html.twig', [
-            'materiels' => $materiels,
+            'materiel' => $materiel,
         ]);
     }
     #[Route('/{idm}', name: 'app_materiel_deleteback', methods: ['POST'])]
@@ -57,6 +84,28 @@ class MaterielController extends AbstractController
 
         return $this->redirectToRoute('app_materiel_afficherback', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/', name: 'app_materiel_index', methods: ['GET'])]
+    public function index(EntityManagerInterface $entityManager): Response
+    {
+        $materiel = $entityManager
+            ->getRepository(Materiel::class)
+            ->findAll();
+
+        return $this->render('materiel/index.html.twig', [
+            'materiel' => $materiel,
+        ]);
+    }
+    #[Route('/{idm}', name: 'app_materiel_delete', methods: ['POST'])]
+    public function delete(Request $request, Materiel $materiel, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$materiel->getIdm(), $request->request->get('_token'))) {
+            $entityManager->remove($materiel);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_materiel_index', [], Response::HTTP_SEE_OTHER);
+    }
+   
     #[Route('/new/n', name: 'app_materiel_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,SluggerInterface $slugger): Response
     {

@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="materiel", indexes={@ORM\Index(name="fk_mat", columns={"idff"}), @ORM\Index(name="fk_uu", columns={"idu"})})
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\MaterielRepository")
  */
 class Materiel
 {
@@ -50,6 +51,7 @@ class Materiel
      */
     #[Assert\Length(min:2)]
     #[Assert\Length(max:25)]
+    #[Assert\Regex(pattern: '/^\d+$/', message: 'Le prix doit contenir uniquement des chiffres')]
     #[Assert\NotBlank (message:"veuillez saisir le prix")]
     private $prix;
 

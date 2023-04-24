@@ -1,0 +1,32 @@
+
+
+                <table  border="1">
+                    <thead >
+                        <tr>
+                            <th>idf</th>
+                <th>nomf</th>
+                <th>adresse</th>
+                <th>descf</th>
+                <th>emailf</th>
+               
+                
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prod in annoncef %}
+                            <tr>
+                                <td>{{ prod.getIdf() }}</td>
+                                
+                               
+                                <td>{{ prod.getNomf() }}</td>
+                                <td>{{ prod.getAdresse() }}</td>
+                                <td>{{ prod.getDescf() }}</td>
+                                <td>{{ prod.getEmailf() }}</td>
+                              
+                                  
+                               
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>

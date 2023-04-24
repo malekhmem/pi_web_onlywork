@@ -24,7 +24,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for annoncef in annoncefs %}
+        {% for annoncef in annoncef %}
             <tr>
             
                 <td>{{ annoncef.nomf }}</td>
@@ -45,4 +45,5 @@
     </table>
 
     <a href="{{ path('app_annoncef_new') }}">Create new</a>
+    <a href="{{ path('generator_service') }}"><button type="button" class="btn btn-primary btn-sm">PDF</button></a>
 {% endblock %}
