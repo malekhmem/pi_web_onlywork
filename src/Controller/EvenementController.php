@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Evenement;
+use App\Entity\Annonces;
+
 use App\Form\EvenementType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,6 +15,9 @@ use App\Repository\EvenementRepository;
 use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\Notifier\NotifierInterface;
 use App\Entity\PdfGeneratorService;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Service\MailerService; 
+use Symfony\Component\Mime\Email;
 
 #[Route('/evenement')]
 class EvenementController extends AbstractController
@@ -78,7 +83,7 @@ if($request->isMethod("POST")){
         ]);
     }
     #[Route('/new', name: 'app_evenement_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,NotifierInterface $notifier): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,NotifierInterface $notifier, MailerService $mailer ): Response
     {
         $evenement = new Evenement();
         $form = $this->createForm(EvenementType::class, $evenement);
@@ -99,7 +104,23 @@ if($request->isMethod("POST")){
             ->findBy(['titre'=>$titre]);
             if (empty($evenements)) 
            {
+            $ids=$form->get('ids')->getData();
+            $societe= $entityManager
+            ->getRepository(Annonces::class)
+            ->find(['ids'=>$ids]);
+            $to=$societe->getEmails();
+            
+
             $entityManager->flush();
+           
+            
+               $to=$societe->getEmails();
+               $subject="Nouvel Evenement";
+               $twig = $this->container->get('twig');
+                     $html=$twig->render('email/email.html.twig',['evenement'=>$evenement]);
+                 
+                 $mailer->sendEmail($to,$subject,$html);
+            
             $notifier->send(new Notification('Evenemet ajouté avec succées  ', ['browser']));
             return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -127,11 +148,17 @@ if($request->isMethod("POST")){
     }
     
     #[Route('/', name: 'app_evenement_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager,Request $request,PaginatorInterface $paginator): Response
     {
         $evenements = $entityManager
             ->getRepository(Evenement::class)
             ->findAll();
+
+            $evenements = $paginator->paginate(
+                $evenements, /* query NOT result */
+                $request->query->getInt('page', 1),
+                3
+            );
 
         return $this->render('evenement/index.html.twig', [
             'evenements' => $evenements,

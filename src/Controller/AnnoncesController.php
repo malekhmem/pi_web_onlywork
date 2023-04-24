@@ -15,6 +15,20 @@ use App\Repository\AnnoncesRepository;
 class AnnoncesController extends AbstractController
 { 
     
+    #[Route('/show_in_map/{ids}', name: 'app_annonces_map', methods: ['GET'])]
+    public function Map( Annonces $ids,EntityManagerInterface $entityManager ): Response
+    {
+
+        $ids = $entityManager
+            ->getRepository(Annonces::class)->findBy( 
+                ['ids'=>$ids ]
+            );
+        return $this->render('annonces/api_arcgis.html.twig', [
+            'annonces' => $ids,
+        ]);
+    }
+    
+
     
     #[Route('/{ids}', name: 'app_annonces_deleteback', methods: ['POST'])]
     public function deleteback(Request $request,  Annonces $annonce, EntityManagerInterface $entityManager): Response

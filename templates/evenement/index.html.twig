@@ -61,5 +61,10 @@
   <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_new') }}'">Create new</button>
 <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('generator_service') }}'">PDF</button>
 
+<br>
+<br>
+<br>
+
+<center><div class="btn px-10 py-10" {{knp_pagination_render(evenements) }} </div></center>
 
 {% endblock %}
