@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="poste", indexes={@ORM\Index(name="fk_cat", columns={"idcc"}), @ORM\Index(name="fk_utilisateur", columns={"idu"})})
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\PosteRepository")
  */
 class Poste
 {

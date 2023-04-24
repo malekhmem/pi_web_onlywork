@@ -9,33 +9,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CategorieRepository;
 
 #[Route('/categorie')]
 class CategorieController extends AbstractController
 {
-    #[Route('/', name: 'app_categorie_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+ 
+    #[Route('/{idc}', name: 'app_categorie_delete', methods: ['POST'])]
+    public function delete(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
     {
-        $categories = $entityManager
-            ->getRepository(Categorie::class)
-            ->findAll();
+        if ($this->isCsrfTokenValid('delete'.$categorie->getIdc(), $request->request->get('_token'))) {
+            $entityManager->remove($categorie);
+            $entityManager->flush();
+        }
 
-        return $this->render('categorie/index.html.twig', [
-            'categories' => $categories,
-        ]);
+        return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/afficherback', name: 'app_categorie_afficherback', methods: ['GET'])]
-    public function afficherback(EntityManagerInterface $entityManager): Response
-    {
-        $categories = $entityManager
-            ->getRepository(Categorie::class)
-            ->findAll();
 
-        return $this->render('categorie/index.html.twig', [
-            'categories' => $categories,
-        ]);
-    }
-    #[Route('/new', name: 'app_categorie_new', methods: ['GET', 'POST'])]
+
+    
+   
+    #[Route('/new/o', name: 'app_categorie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $categorie = new Categorie();
@@ -81,14 +75,63 @@ class CategorieController extends AbstractController
         ]);
     }
 
-    #[Route('/{idc}', name: 'app_categorie_delete', methods: ['POST'])]
-    public function delete(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
+    
+    #[Route('/', name: 'app_categorie_index', methods: ['GET', 'POST'])]
+    public function index(EntityManagerInterface $entityManager,CategorieRepository $CategorieRepository,Request $request): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$categorie->getIdc(), $request->request->get('_token'))) {
-            $entityManager->remove($categorie);
-            $entityManager->flush();
-        }
+        $categories = $entityManager
+            ->getRepository(Categorie::class)
+            ->findAll();
+            /////////
+$back = null;
+        
+if($request->isMethod("POST")){
+    if ( $request->request->get('optionsRadios')){
+        $SortKey = $request->request->get('optionsRadios');
+        switch ($SortKey){
+            case 'nomc':
+                $categories = $CategorieRepository->SortByNomc();
+                break;
 
-        return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
+
+
+        }
     }
+    else
+    {
+        $type = $request->request->get('optionsearch');
+        $value = $request->request->get('Search');
+        switch ($type){
+            case 'nomc':
+                $categories = $CategorieRepository->findBynomc($value);
+                break;
+
+
+        }
+    }
+
+    if ( $categories){
+        $back = "success";
+    }else{
+        $back = "failure";
+    }
+}
+    ////////
+        return $this->render('categorie/index.html.twig', [
+            'categories' => $categories,
+        ]);
+    }
+  
+    // #[Route('/afficherback', name: 'app_categorie_afficherback', methods: ['GET', 'POST'])]
+    // public function afficherback(EntityManagerInterface $entityManager,CategorieRepository $CategorieRepository,Request $request): Response
+    // {
+    //     $categories = $entityManager
+    //         ->getRepository(Categorie::class)
+    //         ->findAll();
+    //     return $this->render('categorie/index.html.twig', [
+    //         'categories' => $categories,
+    //     ]);
+    // }
+   
+ 
 }
