@@ -16,7 +16,8 @@ use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Label\Margin\Margin;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
-
+use App\Entity\PdfGeneratorService;
+use App\Service\SendMail;
 
 #[Route('/poste')]
 class PosteController extends AbstractController
@@ -139,7 +140,9 @@ if($request->isMethod("POST")){
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($poste);
             $entityManager->flush();
-
+            $email = $poste->getEmailp();
+            $mailer = new SendMail();
+            $mailer->sendEmail($email, "poste ajoutée avec succées !", "prière de rester joignable"); 
             return $this->redirectToRoute('app_poste_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -147,6 +150,7 @@ if($request->isMethod("POST")){
             'poste' => $poste,
             'form' => $form,
         ]);
+        
     }
 
     #[Route('/{idp}', name: 'app_poste_show', methods: ['GET'])]
@@ -204,6 +208,24 @@ if($request->isMethod("POST")){
         return $response;
     }
 
-  
+    #[Route('/pdf/poste', name: 'generator_service')]
+    public function pdfService(): Response
+    { 
+        $poste= $this->getDoctrine()
+        ->getRepository(Poste::class)
+        ->findAll();
+
+   
+
+        $html =$this->renderView('pdf.html.twig', ['poste' => $poste]);
+        $pdfGeneratorService=new PdfGeneratorService();
+        $pdf = $pdfGeneratorService->generatePdf($html);
+
+        return new Response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="document.pdf"',
+        ]);
+       
+    }
     
 }

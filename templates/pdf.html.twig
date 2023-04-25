@@ -1,0 +1,32 @@
+
+                <table  border="1">
+                    <thead >
+                        <tr>
+                            <th>IdPoste</th>
+                <th>Nom</th>
+                <th>Domaine</th>
+                <th>Email</th>
+                <th>Description</th>
+              
+                
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for poste in poste %}
+                            <tr>
+                                <td>{{ poste.getIdp() }}</td>
+                                
+                               
+                                <td>{{ poste.getNomp() }}</td>
+                                <td>{{ poste.getDomaine() }}</td>
+                                <td>{{ poste.getEmailp() }}</td>
+                                <td>{{ poste.getDescp() }}</td>
+                                             
+                                 
+                                  
+                               
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>

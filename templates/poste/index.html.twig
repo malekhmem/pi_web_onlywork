@@ -26,7 +26,7 @@
                 <td>
                     <a href="{{ path('app_poste_show', {'idp': poste.idp}) }}">show</a>
                     <a href="{{ path('app_poste_edit', {'idp': poste.idp}) }}">edit</a>
-                    <a href="{{ path('app_poste_qr', {'idp': poste.idp}) }}">code qr</a>
+                   <a href="{{ path('app_poste_qr', {'idp': poste.idp}) }}">code qr</a>
                 </td>
             </tr>
         {% else %}
@@ -38,6 +38,6 @@
     </table>
 
     <a href="{{ path('app_poste_new') }}">Create new</a>
-    
+    <a href="{{ path('generator_service') }}"><button type="button" class="btn btn-primary btn-sm">PDF</button></a>
 
 {% endblock %}
