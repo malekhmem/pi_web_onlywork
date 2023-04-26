@@ -136,6 +136,7 @@ class Annoncef
 
         return $this;
     }
+    
     public function __toString(): string
     {
         return $this->nomf;

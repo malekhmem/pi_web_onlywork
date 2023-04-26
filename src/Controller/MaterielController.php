@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Repository\MaterielRepository;
 
+
 #[Route('/materiel')]
 class MaterielController extends AbstractController
 {
@@ -107,7 +108,7 @@ if($request->isMethod("POST")){
     }
    
     #[Route('/new/n', name: 'app_materiel_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,SluggerInterface $slugger): Response
+    public function new(Request $request,  EntityManagerInterface $entityManager,SluggerInterface $slugger): Response
     {
         $materiel = new Materiel();
         $form = $this->createForm(MaterielType::class, $materiel);
@@ -140,10 +141,10 @@ if($request->isMethod("POST")){
             }
             $entityManager->persist($materiel);
             $entityManager->flush();
-
             return $this->redirectToRoute('app_materiel_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        
         return $this->renderForm('materiel/new.html.twig', [
             'materiel' => $materiel,
             'form' => $form,

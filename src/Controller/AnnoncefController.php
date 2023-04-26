@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\AnnoncefRepository;
 use App\Entity\PdfGeneratorService;
+use App\Service\SendMail;
+
 
 #[Route('/annoncef')]
 class AnnoncefController extends AbstractController
@@ -109,7 +111,7 @@ if($request->isMethod("POST")){
     
 
     #[Route('/new/na', name: 'app_annoncef_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager , AnnoncefRepository $annoncefRepository): Response
     {
         $annoncef = new Annoncef();
         $form = $this->createForm(AnnoncefType::class, $annoncef);
@@ -117,8 +119,11 @@ if($request->isMethod("POST")){
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($annoncef);
+            //$annoncefRepository->sms();
             $entityManager->flush();
-
+            $email = $annoncef->getEmailf();
+            $mailer = new SendMail();
+            $mailer->sendEmail($email, "Only work", "merci pour nous faire confiance ! votre annonce est ajouté avec succés");
             return $this->redirectToRoute('app_annoncef_index', [], Response::HTTP_SEE_OTHER);
         }
 

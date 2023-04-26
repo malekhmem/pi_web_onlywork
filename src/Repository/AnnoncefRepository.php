@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\Annoncef;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Twilio\Rest\Client;
 /**
  * @extends ServiceEntityRepository<Annoncef>
  *
@@ -29,6 +29,27 @@ class AnnoncefRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public  function sms(){
+        // Your Account SID and Auth Token from twilio.com/console
+                $sid = 'ACfa4edb6c41c3fb61158fb62d97b9dd61';
+                $auth_token = 'fb4ec68748aa1bfc0641bba480372552';
+        // In production, these should be environment variables. E.g.:
+        // $auth_token = $_ENV["TWILIO_AUTH_TOKEN"]
+        // A Twilio number you own with SMS capabilities
+                $twilio_number = "+16318697050";
+        
+                $client = new Client($sid, $auth_token);
+                $client->messages->create(
+                // the number you'd like to send the message to
+                    '+21692997134',
+                    [
+                        // A Twilio phone number you purchased at twilio.com/console
+                        'from' => '+16318697050',
+                        // the body of the text message you'd like to send
+                        'body' => 'Une nouvelle annonce a été ajouter merci de consulter la liste des annonces pour plus de detail!'
+                    ]
+                );
+            }
 
     public function remove(Annoncef $entity, bool $flush = false): void
     {
@@ -121,4 +142,6 @@ public function findByemail( $emailf)
         ->getQuery()
         ->execute();
 }
+
+
 }
