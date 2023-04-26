@@ -4,6 +4,10 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+
+
 
 /**
  * Annonces
@@ -136,6 +140,23 @@ class Annonces
 
         return $this;
     }
+   /**
+     * @var Collection<int, Evenement>
+     *
+     * @ORM\OneToMany(mappedBy="ids", targetEntity=Evenement::class, orphanRemoval=true)
+     */
+    private Collection $evenements;
 
+    public function __construct()
+    {
+        $this->evenements = new ArrayCollection();
+    }
 
+    /**
+     * @return Collection<int, Evenement>
+     */
+    public function getEvenements(): Collection
+    {
+        return $this->evenements;
+    }
 }

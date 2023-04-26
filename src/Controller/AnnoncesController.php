@@ -10,10 +10,42 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\AnnoncesRepository;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
+use Knp\Component\Pager\PaginatorInterface;
+
 
 #[Route('/annonces')]
 class AnnoncesController extends AbstractController
 { 
+    #[Route('/statistique', name: 'stats')]
+    public function stat()
+        {
+    
+     $repository = $this->getDoctrine()->getRepository(Annonces::class);
+    $annoncess = $repository->findAll();
+    $em = $this->getDoctrine()->getManager();
+    $data = array();
+    $total=0;
+    foreach ($annoncess as $annonces) {
+        $evenements = $annonces->getEvenements();
+        $num_evenements= count($evenements);
+       
+        $data[] = [$annonces->getNoms(), $num_evenements ];
+        $pieChart = new PieChart();
+    $pieChart->getData()->setArrayToDataTable(
+        array_merge([['Noms', 'Nombre d evenements']], $data)
+    );
+    $pieChart->getOptions()->setTitle('Statistiques sur les evenements');
+    $pieChart->getOptions()->setHeight(1000);
+    $pieChart->getOptions()->setWidth(1400);
+    $pieChart->getOptions()->getTitleTextStyle()->setBold(true);
+    $pieChart->getOptions()->getTitleTextStyle()->setColor('green');
+    $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
+    $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
+    $pieChart->getOptions()->getTitleTextStyle()->setFontSize(30);
+    }
+    return $this->render('stats/stat.html.twig', array('piechart' => $pieChart));
+}
     
     #[Route('/show_in_map/{ids}', name: 'app_annonces_map', methods: ['GET'])]
     public function Map( Annonces $ids,EntityManagerInterface $entityManager ): Response
@@ -101,11 +133,16 @@ if($request->isMethod("POST")){
         ]);
     }
     #[Route('/', name: 'app_annonces_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager, Request $request,PaginatorInterface $paginator): Response
     {
         $annonces = $entityManager
             ->getRepository(Annonces::class)
             ->findAll();
+            $annonces = $paginator->paginate(
+                $annonces, /* query NOT result */
+                $request->query->getInt('page', 1),
+                6
+            );
 
         return $this->render('annonces/index.html.twig', [
             'annonces' => $annonces,
@@ -171,5 +208,5 @@ if($request->isMethod("POST")){
 
         return $this->redirectToRoute('app_annonces_index', [], Response::HTTP_SEE_OTHER);
     }
-   
+  
 }

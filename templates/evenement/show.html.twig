@@ -20,8 +20,16 @@
                 <td>{{ evenement.description }}</td>
             </tr>
             <tr>
-                <th>Nomss</th>
+                <th>Noms</th>
                 <td>{{ evenement.nomss }}</td>
+            </tr>
+             <tr>
+                <th>Date</th>
+          <td>{{ evenement.datee ? evenement.datee|date('Y-m-d') : '' }}</td>
+            </tr>
+             <tr>
+                <th>Image</th>
+          <td><img src="{{ asset('uploads/' ~evenement.imagee) }}" style=" width:200px; height:200px; " alt=""/></td>
             </tr>
         </tbody>
     </table>

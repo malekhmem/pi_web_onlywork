@@ -22,16 +22,17 @@
            {% for evenement in evenements %}
         <div class="col-lg-4 col-md-6 mb-4">
         <div class="service-item">
-          <td><img src="{{ asset('uploads/' ~evenement.imagee) }}" style=" width:350px; height:350px; " alt=""/></td>
+          <td><img src="{{ asset('uploads/' ~evenement.imagee) }}" style=" width:350px; height:350px;border-radius:16px;box-shadow: 0 10px 16px 0 rgba(0,0,0,0.5), 0 6px 20px 0 rgba(0,0,0,0.5);" alt=""/></td>
           <center><h2>{{ evenement.titre }}</h2></center>
           <p><strong style="color:#696969"> Description:</strong> {{ evenement.description }}</p>
           <p><strong style="color:#696969" >Nom societe:</strong> {{ evenement.ids.noms }}</p>
-          <p><strong style="color:#696969">Date de fin:</strong> {{ evenement.datee ? evenement.datee|date('Y-m-d') : '' }}</p>
+          <p><strong style="color:#696969">Date de l'evenement:</strong> {{ evenement.datee ? evenement.datee|date('Y-m-d') : '' }}</p>
  <td>
                     {#<a href="{{ path('app_evenement_show', {'ide': evenement.ide}) }}">show</a>
                     <a href="{{ path('app_evenement_edit', {'ide': evenement.ide}) }}">edit</a>#}
-                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_show', {'ide': evenement.ide}) }}'">Show</button>
-                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_edit', {'ide': evenement.ide}) }}'">Edit</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_show', {'ide': evenement.ide}) }}'"class = "btn btn-primary px-3 py-1">Show</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_edit', {'ide': evenement.ide}) }}'"class = "btn btn-primary px-3 py-1">Edit</button>
+                    <td><a href="{{ path('app_qr_cod', {'id': evenement.ide}) }}" class="btn btn-primary px-3 py-1"class = "btn btn-primary px-3 py-1">qr code</a></td>
 
 
                 </td>

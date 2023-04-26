@@ -82,6 +82,17 @@ if($request->isMethod("POST")){
             'evenements' => $evenements,
         ]);
     }
+    #[Route('/{ide}', name: 'app_evenement_deletteback', methods: ['POST'])]
+    public function deletteback(Request $request, Evenement $evenement, EntityManagerInterface $entityManager ,NotifierInterface $notifier): Response
+    {
+        if ($this->isCsrfTokenValid('deletteback'.$evenement->getIde(), $request->request->get('_token'))) {
+            $entityManager->remove($evenement);
+            $entityManager->flush();
+        }
+        $notifier->send(new Notification('Evenemet suprimée avec succées  ', ['browser']));
+        return $this->redirectToRoute('app_evenement_afficherback', [], Response::HTTP_SEE_OTHER);
+    }
+   
     #[Route('/new', name: 'app_evenement_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,NotifierInterface $notifier, MailerService $mailer ): Response
     {
@@ -136,16 +147,7 @@ if($request->isMethod("POST")){
         ]);
     }
 
-    #[Route('/{ide}', name: 'app_evenement_deletteback', methods: ['POST'])]
-    public function deletteback(Request $request, Evenement $evenement, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('deletteback'.$evenement->getIde(), $request->request->get('_token'))) {
-            $entityManager->remove($evenement);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_evenement_afficherback', [], Response::HTTP_SEE_OTHER);
-    }
+   
     
     #[Route('/', name: 'app_evenement_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager,Request $request,PaginatorInterface $paginator): Response
@@ -157,7 +159,7 @@ if($request->isMethod("POST")){
             $evenements = $paginator->paginate(
                 $evenements, /* query NOT result */
                 $request->query->getInt('page', 1),
-                3
+                6
             );
 
         return $this->render('evenement/index.html.twig', [
