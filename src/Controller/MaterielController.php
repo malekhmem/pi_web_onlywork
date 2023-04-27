@@ -12,6 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Repository\MaterielRepository;
+use Symfony\Component\Notifier\Notification\Notification;
+use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\Notifier\Recipient\Recipient;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 
 
 #[Route('/materiel')]
@@ -141,6 +145,9 @@ if($request->isMethod("POST")){
             }
             $entityManager->persist($materiel);
             $entityManager->flush();
+            $this->addFlash(
+                'info',
+                'Materiel successfully added !');
             return $this->redirectToRoute('app_materiel_index', [], Response::HTTP_SEE_OTHER);
         }
 
