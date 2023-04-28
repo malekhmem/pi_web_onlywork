@@ -9,10 +9,10 @@
         <div class="container">
             <div class="section-header text-center">
             <div id="google_translate_element"></div>
-            <h4 style="margin-top:50px; margin-bottom:50px;">Liste des annoncef</h4>
+            <h4 style="margin-top:50px; margin-bottom:50px;">Liste des annonces</h4>
             </div>
-            <div class="row">
-
+            <input name="search" type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..."/>
+            <div class="row" id="search-results">
         {% for annoncef in annoncef %}
          <div class="col-lg-4 col-md-6 mb-4">
          <div class="service-item">
@@ -64,5 +64,22 @@
 
 {{ knp_pagination_render(annoncef) }}
 
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+        $(function () {
+$('input[name="search"]').keyup(function () {
+var searchValue = $(this).val();
+$.ajax({
+type: 'POST',
+url: '{{ path('app_annoncef_search') }}',
+data: {
+'search': searchValue
+},
+success: function (data) {
+$('#search-results').html(data.html);
+}
+});
+});
+});
+    </script>
 {% endblock %}

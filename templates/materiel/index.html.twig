@@ -1,6 +1,6 @@
 {% extends 'front.html.twig' %}
 
-{% block title %}Materiel {% endblock %}
+{% block title %} =Materiel {% endblock %}
 
 {% block body %}
 
@@ -10,8 +10,8 @@
             <div id="google_translate_element"></div>
             <h4 style="margin-top:50px; margin-bottom:50px;">Liste des materiels</h4>
             </div>
-            <div class="row">
-
+                       <input name="search" type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..."/>
+            <div class="row" id="search-results">
 
         {% for materiel in materiel %}
           <div class="col-lg-4 col-md-6 mb-4">
@@ -39,7 +39,7 @@
             
         {% else %}
  <div class="col">
-        <p class="text-center">Aucunne annonce trouvé.</p>
+        <p class="text-center">Aucun materiel trouvé.</p>
       </div>
 
         {% endfor %}
@@ -67,4 +67,24 @@
 
 
     {{ knp_pagination_render(materiel) }}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+        $(function () {
+$('input[name="search"]').keyup(function () {
+var searchValue = $(this).val();
+$.ajax({
+type: 'POST',
+url: '{{ path('app_materiel_search') }}',
+data: {
+'search': searchValue
+},
+success: function (data) {
+$('#search-results').html(data.html);
+}
+});
+});
+});
+    </script>
+
 {% endblock %}

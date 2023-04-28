@@ -15,6 +15,7 @@ use App\Service\SendMail;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/annoncef')]
 class AnnoncefController extends AbstractController
@@ -196,5 +197,30 @@ if($request->isMethod("POST")){
 
     return $response;
 }
+#[Route('/search/', name: 'app_annoncef_search', methods: ['GET', 'POST'])]
+    public function search(Request $request, EntityManagerInterface $em): Response
+    {
+        $searchTerm = $request->request->get('search');
+        $qb = $em->createQueryBuilder();
+        $qb->select('e')
+            ->from(Annoncef::class, 'e')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->like('e.emailf', ':searchTerm'),
+                    $qb->expr()->like('e.nomf', ':searchTerm'),
+                    $qb->expr()->like('e.adresse', ':searchTerm'),
+                    // $qb->expr()->like('e.attribute2', ':searchTerm'),
+                    // add more attributes as needed
+                )
+            )
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+
+        $results = $qb->getQuery()->getResult();
+        $html = $this->renderView('tableAnnoncef.html.twig', [
+            'annoncef' => $results,
+        ]);
+
+        return new JsonResponse(['html' => $html]);
+    }
 
 }

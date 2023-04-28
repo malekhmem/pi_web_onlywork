@@ -17,7 +17,7 @@ use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Component\Notifier\Recipient\Recipient;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Knp\Component\Pager\PaginatorInterface;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/materiel')]
 class MaterielController extends AbstractController
@@ -218,4 +218,29 @@ if($request->isMethod("POST")){
 
 
 
+    #[Route('/search/', name: 'app_materiel_search', methods: ['GET', 'POST'])]
+    public function search(Request $request, EntityManagerInterface $em): Response
+    {
+        $searchTerm = $request->request->get('search');
+        $qb = $em->createQueryBuilder();
+        $qb->select('e')
+            ->from(Materiel::class, 'e')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->like('e.nomm', ':searchTerm'),
+                    $qb->expr()->like('e.prix', ':searchTerm'),
+                    $qb->expr()->like('e.marque', ':searchTerm'),
+                    // $qb->expr()->like('e.attribute2', ':searchTerm'),
+                    // add more attributes as needed
+                )
+            )
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+
+        $results = $qb->getQuery()->getResult();
+        $html = $this->renderView('tableMateriel.html.twig', [
+            'materiel' => $results,
+        ]);
+
+        return new JsonResponse(['html' => $html]);
+    }
 }
