@@ -18,7 +18,13 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use App\Entity\PdfGeneratorService;
 use App\Service\SendMail;
-
+use Symfony\Component\Notifier\Notification\Notification;
+use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\Notifier\Recipient\Recipient;
+use MercurySeries\FlashyBundle\FlashyNotifier;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Knp\Component\Pager\PaginatorInterface;
 #[Route('/poste')]
 class PosteController extends AbstractController
 {
@@ -108,16 +114,25 @@ if($request->isMethod("POST")){
 
    
     #[Route('/', name: 'app_poste_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager,PaginatorInterface $paginator,Request $request): Response
     {
         $postes = $entityManager
             ->getRepository(Poste::class)
             ->findAll();
-
+            if (count($postes)){
+                $back = "success";
+            }else{
+                $back = "failure";
+            }
+            $postes = $paginator->paginate(
+                $postes, /* query NOT result */
+                $request->query->getInt('page', 1),
+                3);
         return $this->render('poste/index.html.twig', [
             'postes' => $postes,
         ]);
     }
+
     #[Route('/{idp}', name: 'app_poste_delete', methods: ['POST'])]
     public function delete(Request $request, Poste $poste, EntityManagerInterface $entityManager): Response
     {
@@ -140,6 +155,11 @@ if($request->isMethod("POST")){
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($poste);
             $entityManager->flush();
+            $entityManager->flush();
+            $this->addFlash(
+                'info',
+                'Post successfully added !'
+            );
             $email = $poste->getEmailp();
             $mailer = new SendMail();
             $mailer->sendEmail($email, "poste ajoutée avec succées !", "prière de rester joignable"); 
@@ -168,7 +188,7 @@ if($request->isMethod("POST")){
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+           
 
             return $this->redirectToRoute('app_poste_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -208,7 +228,7 @@ if($request->isMethod("POST")){
         return $response;
     }
 
-    #[Route('/pdf/poste', name: 'generator_service')]
+   /* #[Route('/pdf/poste', name: 'generator_service')]
     public function pdfService(): Response
     { 
         $poste= $this->getDoctrine()
@@ -226,6 +246,31 @@ if($request->isMethod("POST")){
             'Content-Disposition' => 'inline; filename="document.pdf"',
         ]);
        
-    }
+    }*/
+    #[Route('/pdf/{idp}', name: 'generator_service', methods:['GET'])]
+    public function generatePdf(Poste $poste)
+{
+    // Créer une instance de Dompdf
+    $dompdf = new Dompdf();
+    
+    // Récupérer la vue Twig pour le produit
+    $html = $this->renderView('pdf.html.twig', [
+        'poste' => $poste
+    ]);
+
+    // Charger le contenu HTML dans Dompdf
+    $dompdf->loadHtml($html);
+
+    // Rendre le document PDF
+    $dompdf->render();
+
+    // Retourner le document PDF comme réponse
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/pdf');
+    $response->setContent($dompdf->output());
+    
+
+    return $response;
+}
     
 }

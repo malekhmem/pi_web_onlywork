@@ -1,32 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        background-color: #4e4b6a; /* Add a custom background color */
+        font-family: Arial, sans-serif; /* Set a custom font family */
+      }
 
-                <table  border="1">
-                    <thead >
-                        <tr>
-                            <th>IdPoste</th>
-                <th>Nom</th>
-                <th>Domaine</th>
-                <th>Email</th>
-                <th>Description</th>
-              
-                
-                          
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for poste in poste %}
-                            <tr>
-                                <td>{{ poste.getIdp() }}</td>
-                                
-                               
-                                <td>{{ poste.getNomp() }}</td>
-                                <td>{{ poste.getDomaine() }}</td>
-                                <td>{{ poste.getEmailp() }}</td>
-                                <td>{{ poste.getDescp() }}</td>
-                                             
-                                 
-                                  
-                               
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+      h1 {
+        color: #fff; /* Add a custom text color */
+        text-align: center; /* Center the text */
+        margin-top: 50px; /* Add some top margin */
+      }
+
+      .poste-container {
+        width: 80%;
+        margin: 0 auto; /* Center the container */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        padding: 50px;
+        border-radius: 20px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .poste-item {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .poste-label {
+        font-size: 18px;
+        color: #4e4b6a;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .poste-value {
+        font-size: 16px;
+        color: #4e4b6a;
+      }
+
+      .btn {
+        background-color: #fff;
+        color: #4e4b6a;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+        border: 2px solid #fff;
+      }
+
+      .btn:hover {
+        background-color: #4e4b6a;
+        color: #fff;
+        border: 2px solid #4e4b6a;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>{% block title %}poste{% endblock %}</h1>
+    <div class="poste-container">
+      <div class="poste-item">
+        <div class="poste-label">Nom</div>
+        <div class="poste-value">{{ poste.getNomp() }}</div>
+      </div>
+      <div class="poste-item">
+        <div class="poste-label">Domaine</div>
+        <div class="poste-value">{{ poste.getDomaine() }}</div>
+      </div>
+      <div class="poste-item">
+        <div class="poste-label">Email</div>
+        <div class="poste-value">{{ poste.getEmailp() }}</div>
+      </div>
+      <div class="poste-item">
+        <div class="poste-label">Description</div>
+        <div class="poste-value">{{ poste.getDescp() }}</div>
+      </div>
+    </div>
+  </body>
+</html>
