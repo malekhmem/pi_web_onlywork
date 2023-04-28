@@ -25,86 +25,102 @@ use MercurySeries\FlashyBundle\FlashyNotifier;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 #[Route('/poste')]
 class PosteController extends AbstractController
 {
-    #[Route('/statscategorie', name: 'stats_categorie', methods: ['GET', 'POST'])]
-public function statsCategorie(PosteRepository $posteRepository): Response
-{
-    $stats = $posteRepository->countByCategorie();
-    
-    return $this->render('stats_categorie.html.twig', [
-        'stats' => $stats
-    ]);
-}
 
-  
-    #[Route('/afficherback', name: 'app_poste_afficherback', methods: ['GET','POST'])]
-    public function afficherback(EntityManagerInterface $entityManager,PosteRepository $PosteRepository,Request $request): Response
+    #[Route('/{idp}/edit', name: 'app_poste_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Poste $poste, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(PosteType::class, $poste);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_poste_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('poste/edit.html.twig', [
+            'poste' => $poste,
+            'form' => $form,
+        ]);
+    }
+    #[Route('/statscategorie', name: 'stats_categorie', methods: ['GET', 'POST'])]
+    public function statsCategorie(PosteRepository $posteRepository): Response
+    {
+        $stats = $posteRepository->countByCategorie();
+
+        return $this->render('stats_categorie.html.twig', [
+            'stats' => $stats
+        ]);
+    }
+
+
+    #[Route('/afficherback', name: 'app_poste_afficherback', methods: ['GET', 'POST'])]
+    public function afficherback(EntityManagerInterface $entityManager, PosteRepository $PosteRepository, Request $request): Response
     {
         $postes = $entityManager
             ->getRepository(Poste::class)
             ->findAll();
-            /////////
-$back = null;
-        
-if($request->isMethod("POST")){
-    if ( $request->request->get('optionsRadios')){
-        $SortKey = $request->request->get('optionsRadios');
-        switch ($SortKey){
-            case 'nomp':
-                $postes = $PosteRepository->SortByNomp();
-                break;
+        /////////
+        $back = null;
 
-            case 'domaine':
-                $postes = $PosteRepository->SortByDomaine();
-                break;
+        if ($request->isMethod("POST")) {
+            if ($request->request->get('optionsRadios')) {
+                $SortKey = $request->request->get('optionsRadios');
+                switch ($SortKey) {
+                    case 'nomp':
+                        $postes = $PosteRepository->SortByNomp();
+                        break;
 
-            case 'emailp':
-                $postes = $PosteRepository->SortByEmail();
-                break;
+                    case 'domaine':
+                        $postes = $PosteRepository->SortByDomaine();
+                        break;
 
+                    case 'emailp':
+                        $postes = $PosteRepository->SortByEmail();
+                        break;
+                }
+            } else {
+                $type = $request->request->get('optionsearch');
+                $value = $request->request->get('Search');
+                switch ($type) {
+                    case 'nomp':
+                        $postes = $PosteRepository->findBynomp($value);
+                        break;
 
+                    case 'domaine':
+                        $postes = $PosteRepository->findByDomaine($value);
+                        break;
+
+                    case 'emailp':
+                        $postes = $PosteRepository->findByemail($value);
+                        break;
+                }
+            }
+
+            if ($postes) {
+                $back = "success";
+            } else {
+                $back = "failure";
+            }
         }
-    }
-    else
-    {
-        $type = $request->request->get('optionsearch');
-        $value = $request->request->get('Search');
-        switch ($type){
-            case 'nomp':
-                $postes = $PosteRepository->findBynomp($value);
-                break;
-
-            case 'domaine':
-                $postes = $PosteRepository->findByDomaine($value);
-                break;
-
-            case 'emailp':
-                $postes = $PosteRepository->findByemail($value);
-                break;
-
-
-        }
-    }
-
-    if ( $postes){
-        $back = "success";
-    }else{
-        $back = "failure";
-    }
-}
-    ////////
+        ////////
 
         return $this->render('poste/afficherback.html.twig', [
             'postes' => $postes,
         ]);
     }
-   
+
+
+
     #[Route('/{idp}/d', name: 'app_poste_deleteback', methods: ['POST'])]
     public function deleteback(Request $request, Poste $poste, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('deleteback'.$poste->getIdp(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('deleteback' . $poste->getIdp(), $request->request->get('_token'))) {
             $entityManager->remove($poste);
             $entityManager->flush();
         }
@@ -112,39 +128,66 @@ if($request->isMethod("POST")){
         return $this->redirectToRoute('app_poste_afficherback', [], Response::HTTP_SEE_OTHER);
     }
 
-   
+
     #[Route('/', name: 'app_poste_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager,PaginatorInterface $paginator,Request $request): Response
+    public function index(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
         $postes = $entityManager
             ->getRepository(Poste::class)
             ->findAll();
-            if (count($postes)){
-                $back = "success";
-            }else{
-                $back = "failure";
-            }
-            $postes = $paginator->paginate(
-                $postes, /* query NOT result */
-                $request->query->getInt('page', 1),
-                3);
+        if (count($postes)) {
+            $back = "success";
+        } else {
+            $back = "failure";
+        }
+        $postes = $paginator->paginate(
+            $postes, /* query NOT result */
+            $request->query->getInt('page', 1),
+            3
+        );
         return $this->render('poste/index.html.twig', [
             'postes' => $postes,
         ]);
     }
 
+   #[Route('/search', name: 'app_postes_search', methods: ['GET', 'POST'])]
+    public function search(Request $request, EntityManagerInterface $em): Response
+    {
+        $searchTerm = $request->request->get('search');
+        $qb = $em->createQueryBuilder();
+        $qb->select('e')
+            ->from(Poste::class, 'e')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->like('e.emailp', ':searchTerm'),
+                    $qb->expr()->like('e.nomp', ':searchTerm'),
+                    $qb->expr()->like('e.domaine', ':searchTerm'),
+                    // $qb->expr()->like('e.attribute2', ':searchTerm'),
+                    // add more attributes as needed
+                )
+            )
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+
+        $results = $qb->getQuery()->getResult();
+        $html = $this->renderView('tablePosts.html.twig', [
+            'postes' => $results,
+        ]);
+
+        return new JsonResponse(['html' => $html]);
+    }
+
     #[Route('/{idp}', name: 'app_poste_delete', methods: ['POST'])]
     public function delete(Request $request, Poste $poste, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$poste->getIdp(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $poste->getIdp(), $request->request->get('_token'))) {
             $entityManager->remove($poste);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_poste_index', [], Response::HTTP_SEE_OTHER);
     }
-   
-   
+
+  
     #[Route('/new/a', name: 'app_poste_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -162,7 +205,7 @@ if($request->isMethod("POST")){
             );
             $email = $poste->getEmailp();
             $mailer = new SendMail();
-            $mailer->sendEmail($email, "poste ajoutée avec succées !", "prière de rester joignable"); 
+            $mailer->sendEmail($email, "poste ajoutée avec succées !", "prière de rester joignable");
             return $this->redirectToRoute('app_poste_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -170,7 +213,6 @@ if($request->isMethod("POST")){
             'poste' => $poste,
             'form' => $form,
         ]);
-        
     }
 
     #[Route('/{idp}', name: 'app_poste_show', methods: ['GET'])]
@@ -181,34 +223,18 @@ if($request->isMethod("POST")){
         ]);
     }
 
-    #[Route('/{idp}/edit', name: 'app_poste_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Poste $poste, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(PosteType::class, $poste);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-           
-
-            return $this->redirectToRoute('app_poste_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('poste/edit.html.twig', [
-            'poste' => $poste,
-            'form' => $form,
-        ]);
-    }
+    
     #[Route('/qr/{idp}', name: 'app_poste_qr')]
-    public function qr($idp,PosteRepository $rep)
+    public function qr($idp, PosteRepository $rep)
     {
-        $dd=$rep->find($idp);
+        $dd = $rep->find($idp);
         if (!$dd) {
             throw $this->createNotFoundException('poste not found');
         }
-        
+
         $result = Builder::create()
             ->writer(new PngWriter())
-            ->data("email :".$dd->getEmailp())
+            ->data("email :" . $dd->getEmailp())
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(300)
@@ -217,18 +243,18 @@ if($request->isMethod("POST")){
             ->labelAlignment(new LabelAlignmentCenter())
             ->labelMargin(new Margin(15, 5, 5, 5))
             ->build();
-        
+
         $namePng = uniqid('', true) . '.png';
-        $result->saveToFile($this->getParameter('images_directory').$namePng);
-        
+        $result->saveToFile($this->getParameter('images_directory') . $namePng);
+
         $response = new Response();
         $response->headers->set('Content-Type', 'image/png');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$namePng.'"');
-        $response->setContent (file_get_contents($this->getParameter('images_directory').$namePng));
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $namePng . '"');
+        $response->setContent(file_get_contents($this->getParameter('images_directory') . $namePng));
         return $response;
     }
 
-   /* #[Route('/pdf/poste', name: 'generator_service')]
+    /* #[Route('/pdf/poste', name: 'generator_service')]
     public function pdfService(): Response
     { 
         $poste= $this->getDoctrine()
@@ -247,30 +273,29 @@ if($request->isMethod("POST")){
         ]);
        
     }*/
-    #[Route('/pdf/{idp}', name: 'generator_service', methods:['GET'])]
+    #[Route('/pdf/{idp}', name: 'generator_service', methods: ['GET'])]
     public function generatePdf(Poste $poste)
-{
-    // Créer une instance de Dompdf
-    $dompdf = new Dompdf();
-    
-    // Récupérer la vue Twig pour le produit
-    $html = $this->renderView('pdf.html.twig', [
-        'poste' => $poste
-    ]);
+    {
+        // Créer une instance de Dompdf
+        $dompdf = new Dompdf();
 
-    // Charger le contenu HTML dans Dompdf
-    $dompdf->loadHtml($html);
+        // Récupérer la vue Twig pour le produit
+        $html = $this->renderView('pdf.html.twig', [
+            'poste' => $poste
+        ]);
 
-    // Rendre le document PDF
-    $dompdf->render();
+        // Charger le contenu HTML dans Dompdf
+        $dompdf->loadHtml($html);
 
-    // Retourner le document PDF comme réponse
-    $response = new Response();
-    $response->headers->set('Content-Type', 'application/pdf');
-    $response->setContent($dompdf->output());
-    
+        // Rendre le document PDF
+        $dompdf->render();
 
-    return $response;
-}
-    
+        // Retourner le document PDF comme réponse
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->setContent($dompdf->output());
+
+
+        return $response;
+    }
 }
