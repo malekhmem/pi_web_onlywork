@@ -12,7 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\AnnoncefRepository;
 use App\Entity\PdfGeneratorService;
 use App\Service\SendMail;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/annoncef')]
 class AnnoncefController extends AbstractController
@@ -88,11 +90,21 @@ if($request->isMethod("POST")){
     
     
     #[Route('/', name: 'app_annoncef_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(Request $request,EntityManagerInterface $entityManager,PaginatorInterface $paginator): Response
     {
         $annoncef = $entityManager
             ->getRepository(Annoncef::class)
             ->findAll();
+            if (count($annoncef)){
+                $back = "success";
+            }else{
+                $back = "failure";
+            }
+            $annoncef = $paginator->paginate(
+                $annoncef, /* query NOT result */
+                $request->query->getInt('page', 1),
+                3);
+
 
         return $this->render('annoncef/index.html.twig', [
             'annoncef' => $annoncef,
@@ -158,25 +170,31 @@ if($request->isMethod("POST")){
             'form' => $form,
         ]);
     }
-#[Route('/pdf/annoncef', name: 'generator_service')]
-    public function pdfService(): Response
-    { 
-        $annoncef= $this->getDoctrine()
-        ->getRepository(Annoncef::class)
-        ->findAll();
+    
+    #[Route('/pdf/{idf}', name: 'generator_service', methods:['GET'])]
+    public function generatePdf(annoncef $annoncef)
+{
+    // Créer une instance de Dompdf
+    $dompdf = new Dompdf();
+    
+    // Récupérer la vue Twig pour le produit
+    $html = $this->renderView('pdf.html.twig', [
+        'annoncef' => $annoncef
+    ]);
 
-   
+    // Charger le contenu HTML dans Dompdf
+    $dompdf->loadHtml($html);
 
-        $html =$this->renderView('pdf.html.twig', ['annoncef' => $annoncef]);
-        $pdfGeneratorService=new PdfGeneratorService();
-        $pdf = $pdfGeneratorService->generatePdf($html);
+    // Rendre le document PDF
+    $dompdf->render();
 
-        return new Response($pdf, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="document.pdf"',
-        ]);
-       
-    }
+    // Retourner le document PDF comme réponse
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/pdf');
+    $response->setContent($dompdf->output());
+    
 
+    return $response;
+}
 
 }

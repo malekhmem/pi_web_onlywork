@@ -16,6 +16,7 @@ use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Component\Notifier\Recipient\Recipient;
 use MercurySeries\FlashyBundle\FlashyNotifier;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 #[Route('/materiel')]
@@ -90,12 +91,20 @@ if($request->isMethod("POST")){
         return $this->redirectToRoute('app_materiel_afficherback', [], Response::HTTP_SEE_OTHER);
     }
     #[Route('/', name: 'app_materiel_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(Request $request,EntityManagerInterface $entityManager,PaginatorInterface $paginator): Response
     {
         $materiel = $entityManager
             ->getRepository(Materiel::class)
             ->findAll();
-
+            if (count($materiel)){
+                $back = "success";
+            }else{
+                $back = "failure";
+            }
+            $materiel = $paginator->paginate(
+                $materiel, /* query NOT result */
+                $request->query->getInt('page', 1),
+                3);
         return $this->render('materiel/index.html.twig', [
             'materiel' => $materiel,
         ]);
