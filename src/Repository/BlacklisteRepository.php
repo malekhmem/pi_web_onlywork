@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Blackliste;
+use App\Entity\Blacklist;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Blackliste>
  *
- * @method Blackliste|null find($id, $lockMode = null, $lockVersion = null)
- * @method Blackliste|null findOneBy(array $criteria, array $orderBy = null)
- * @method Blackliste[]    findAll()
- * @method Blackliste[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Blacklist|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Blacklist|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Blacklist[]    findAll()
+ * @method Blacklist[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class BlacklisteRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Blackliste::class);
+        parent::__construct($registry, Blacklist::class);
     }
 
-    public function save(Blackliste $entity, bool $flush = false): void
+    public function save(Blacklist $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class BlacklisteRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Blackliste $entity, bool $flush = false): void
+    public function remove(Blacklist $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class BlacklisteRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Blackliste[] Returns an array of Blackliste objects
+//     * @return Blacklist[] Returns an array of Blacklist objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class BlacklisteRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Blackliste
+//    public function findOneBySomeField($value): ?Blacklist
 //    {
 //        return $this->createQueryBuilder('b')
 //            ->andWhere('b.exampleField = :val')
@@ -63,4 +63,21 @@ class BlacklisteRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function SortBydescb()
+{
+    return $this->createQueryBuilder('e')
+        ->orderBy('e.descb','ASC')
+        ->getQuery()
+        ->getResult()
+        ;
+}
+
+public function findBydescb( $descb)
+{
+    return $this-> createQueryBuilder('e')
+        ->andWhere('e.descb LIKE :descb')
+        ->setParameter('descb','%' .$descb. '%')
+        ->getQuery()
+        ->execute();
+}
 }

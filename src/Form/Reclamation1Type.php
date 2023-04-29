@@ -6,6 +6,7 @@ use App\Entity\Reclamation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class Reclamation1Type extends AbstractType
 {
@@ -16,9 +17,13 @@ class Reclamation1Type extends AbstractType
             ->add('nomr')
             ->add('emailr')
             ->add('type')
+            ->add('imageFile', VichFileType::class, [
+                'required' => false,
+                'allow_delete' => true,
+                'download_uri' => true,
+            ])
             ->add('idu')
-            ->add('idb')
-        ;
+            ->add('idb');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -11,6 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="reclamation", indexes={@ORM\Index(name="fk_utill", columns={"idu"}), @ORM\Index(name="pk_foreigenb", columns={"idb"})})
  * @ORM\Entity
+      * @Vich\Uploadable
+
+ * @ORM\Entity(repositoryClass="App\Repository\ReclamationRepository")
+
  */
 class Reclamation
 {
@@ -78,7 +84,25 @@ class Reclamation
      * })
      */
     private $idb;
+   
 
+ 
+    
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         * @var string
+         */
+        private $image;
+    
+        /**
+         * @Vich\UploadableField(mapping="product_image", fileNameProperty="image")
+         * @var File
+         */
+        private $imageFile;
+    
+        // ...
+    
+    
     public function getIdr(): ?int
     {
         return $this->idr;
@@ -131,6 +155,37 @@ class Reclamation
 
         return $this;
     }
+    
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): self
+    {
+        $this->imageFile = $imageFile;
+
+        if ($imageFile) {
+            // It's required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
 
     public function getIdu(): ?Utilisateur
     {

@@ -11,6 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="blacklist")
  * @ORM\Entity
+ *  @ORM\Entity(repositoryClass="App\Repository\BlacklisteRepository")
+
  */
 class Blacklist
 {

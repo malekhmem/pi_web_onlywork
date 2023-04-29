@@ -9,16 +9,57 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\ReclamationRepository;
+use Knp\Component\Pager\PaginatorInterface;
+
 
 #[Route('/reclamation')]
 class ReclamationController extends AbstractController
 {
-    #[Route('/', name: 'app_reclamation_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
-    {
-        $reclamations = $entityManager
-            ->getRepository(Reclamation::class)
-            ->findAll();
+    #[Route('/', name: 'app_reclamation_index', methods: ['GET', 'POST'])]
+    public function index(EntityManagerInterface $entityManager,ReclamationRepository $ReclamationRepository,Request $request,PaginatorInterface $paginator): Response
+        {
+            $reclamations = $entityManager
+                ->getRepository(Reclamation::class)
+                ->findAll();
+                /////////
+    $back = null;
+            
+    if($request->isMethod('POST')){
+        if ( $request->request->get('optionsRadios')){
+            $SortKey = $request->request->get('optionsRadios');
+            switch ($SortKey){
+    
+                case 'emailr':
+                    $reclamations = $ReclamationRepository->SortByEmailr();
+                    break;
+    
+    
+            }
+        }
+        else
+        {
+            $type = $request->request->get('optionsearch');
+            $value = $request->request->get('Search');
+            switch ($type){
+                case 'emailr':
+                    $reclamations = $ReclamationRepository->findByemailr($value);
+                    break;
+    
+    
+            }
+        }
+    
+        if ( $reclamations){
+            $back = "success";
+        }else{
+            $back = "failure";
+        }
+    }
+        ////////
+        $reclamations = $paginator->paginate(
+            $reclamations, /* query NOT result */
+            $request->query->getInt('page', 1),3);
 
         return $this->render('reclamation/index.html.twig', [
             'reclamations' => $reclamations,

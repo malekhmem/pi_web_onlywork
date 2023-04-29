@@ -1,6 +1,13 @@
 templates:
     path: /reclamation
     controller: App\Controller\ReclamationController::index
+pdf_generate:
+    path: /pdf/generate
+    controller: App\Controller\pdf::pdfAction
+
+app_reclamation_count_by_nomr:
+    path: /reclamation/count/{nomr}
+    controller: App\Controller\ReclamationController::countBynomr
 
 controllers:
     resource: '../src/Controller/'

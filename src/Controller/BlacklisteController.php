@@ -9,17 +9,59 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\BlacklisteRepository;
+use Knp\Component\Pager\PaginatorInterface;
+
+
 
 #[Route('/blackliste')]
 class BlacklisteController extends AbstractController
 {
-    #[Route('/', name: 'app_blackliste_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    #[Route('/', name: 'app_blackliste_index', methods: ['GET', 'POST'])]
+    public function index(EntityManagerInterface $entityManager,BlacklisteRepository $BlacklisteRepository,Request $request,PaginatorInterface $paginator): Response
     {
         $blacklists = $entityManager
             ->getRepository(Blacklist::class)
             ->findAll();
 
+        $back = null;
+                
+        if($request->isMethod('POST')){
+            if ( $request->request->get('optionsRadios')){
+                $SortKey = $request->request->get('optionsRadios');
+                switch ($SortKey){
+                    case 'descb':
+                        $blacklists = $BlacklisteRepository->SortBydescb();
+                        break;
+        
+        
+                }
+            }
+            else
+            {
+                $type = $request->request->get('optionsearch');
+                $value = $request->request->get('Search');
+                switch ($type){
+                    case 'descb':
+                        $blacklists = $BlacklisteRepository->findBydescb($value);
+                        break;
+        
+        
+                }
+            }
+        
+            if ( $blacklists){
+                $back = "success";
+            }else{
+                $back = "failure";
+            }
+        }
+            ////////
+            $blacklists = $paginator->paginate(
+                $blacklists,
+                $request->query->getInt('page', 1),
+                3
+            );
         return $this->render('blackliste/index.html.twig', [
             'blacklists' => $blacklists,
         ]);
