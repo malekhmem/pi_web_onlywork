@@ -10,17 +10,75 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/admin/user')]
 class AdminUserController extends AbstractController
 {
-    #[Route('/', name: 'app_admin_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    #[Route('/', name: 'app_admin_user_index', methods: ['GET','POST'])]
+    public function index(UserRepository $userRepository, Request $request, PaginatorInterface $paginator): Response
+    
     {
+        $users = $userRepository->findAll();
+    
+            /////////
+$back = null;
+        
+if($request->isMethod("POST")){
+    if ( $request->request->get('optionsRadios')){
+        $SortKey = $request->request->get('optionsRadios');
+        switch ($SortKey){
+            case 'firstName':
+                $users = $userRepository->SortByfirstName();
+                break;
+
+            case 'lastName':
+                $users = $userRepository->SortBylastName();
+                break;
+
+            case 'email':
+                $users = $userRepository->SortByEmail();
+                break;
+
+
+        }
+    }
+    else
+    {
+        $type = $request->request->get('optionsearch');
+        $value = $request->request->get('Search');
+        switch ($type){
+            case 'firstName':
+                $users = $userRepository->findByfirstName($value);
+                break;
+
+                case 'lastName':
+                    $users = $userRepository->findBylastName($value);
+                break;
+
+                case 'email':
+                    $users = $userRepository->findByEmail($value);
+                break;
+
+
+        }
+    }
+
+    if ( $users){
+        $back = "success";
+    }else{
+        $back = "failure";
+    }
+}
+    ////////
+        
+    
         return $this->render('admin_user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $users,
         ]);
     }
+    
+    
 
     #[Route('/new', name: 'app_admin_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): Response

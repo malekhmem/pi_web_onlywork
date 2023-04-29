@@ -4,14 +4,42 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
-{
+{   
+    #[ORM\Column(length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="firstname should not be blank")
+     */
+private ?string $firstName = null;
+
+
+#[ORM\Column(length: 255)]
+   /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="lastname should not be blank")
+     */
+private ?string $lastName = null;
+
+
+#[ORM\Column(nullable: true)]
+
+ /**
+     * @ORM\Column(type="integer", length=11, unique=true)
+     * @Assert\NotBlank(message="Numéro de téléphone should not be blank")
+     * @Assert\Regex(pattern="/^[0-9]{8}$/", message="Numéro de téléphone should contain 8 numbers")
+     */
+private ?string $phoneNumber = null;
+
+#[ORM\Column(length: 255)]
+private ?string $role = null;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -29,13 +57,79 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    
+
+    /**
+ * @ORM\Column(type="boolean")
+ */
+private $isVerified = false;
+
+public function isVerified(): bool
+{
+    return $this->isVerified;
+}
+
+public function setIsVerified(bool $isVerified): self
+{
+    $this->isVerified = $isVerified;
+
+    return $this;
+}
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
+
+    public function getFirstName(): ?string
+{
+    return $this->firstName;
+}
+
+public function setFirstName(?string $firstName): self
+{
+    $this->firstName = $firstName;
+
+    return $this;
+}
+
+public function getLastName(): ?string
+{
+    return $this->lastName;
+}
+
+public function setLastName(?string $lastName): self
+{
+    $this->lastName = $lastName;
+
+    return $this;
+}
+
+public function getPhoneNumber(): ?string
+{
+    return $this->phoneNumber;
+}
+
+public function setPhoneNumber(?string $phoneNumber): self
+{
+    $this->phoneNumber = $phoneNumber;
+
+    return $this;
+}
+ 
+
+public function getRole(): ?string
+{
+    return $this->role;
+}
+
+public function setRole(?string $role): self
+{
+    $this->role = $role;
+
+    return $this;
+}
 
     public function getEmail(): ?string
     {
@@ -79,12 +173,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
+  public function setRoles(?array $roles): self
+{
+    $this->roles = $roles ?: [];
 
-        return $this;
-    }
+    return $this;
+}
 
     /**
      * @see PasswordAuthenticatedUserInterface
@@ -119,17 +213,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
     }
 }

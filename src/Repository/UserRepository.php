@@ -56,6 +56,64 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->save($user, true);
     }
 
+    public function SortByfirstName(){
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.firstName','ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    
+    public function SortBylastName()
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.lastName','ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    
+    
+    public function SortByEmail()
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.email','ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    public function findByfirstName( $firstName)
+    {
+        return $this-> createQueryBuilder('e')
+            ->andWhere('e.firstName LIKE :firstName')
+            ->setParameter('firstName','%' .$firstName. '%')
+            ->getQuery()
+            ->execute();
+    }
+    public function findBylastName( $lastName)
+    {
+        return $this-> createQueryBuilder('e')
+            ->andWhere('e.lastName LIKE :lastName')
+            ->setParameter('lastName','%' .$lastName. '%')
+            ->getQuery()
+            ->execute();
+    }
+    public function findByEmail( $email)
+    {
+        return $this-> createQueryBuilder('e')
+            ->andWhere('e.email LIKE :email')
+            ->setParameter('email','%' .$email. '%')
+            ->getQuery()
+            ->execute();
+    }
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */
