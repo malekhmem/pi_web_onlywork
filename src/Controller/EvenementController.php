@@ -22,6 +22,60 @@ use Symfony\Component\Mime\Email;
 #[Route('/evenement')]
 class EvenementController extends AbstractController
 {
+    #[Route('/new', name: 'app_evenement_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager,NotifierInterface $notifier, MailerService $mailer ): Response
+    {
+        $evenement = new Evenement();
+        $form = $this->createForm(EvenementType::class, $evenement);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+           
+            $file = $evenement->getImagee();
+            $filename = md5(uniqid()).'.'.$file->guessExtension();
+            $file->move($this->getParameter('uploads'),$filename);
+            $evenement->setImagee($filename);
+
+            
+            $entityManager->persist($evenement);
+            $titre = $form->get('titre')->getData();
+            $evenements = $entityManager
+            ->getRepository(Evenement::class)
+            ->findBy(['titre'=>$titre]);
+            if (empty($evenements)) 
+           {
+            $ids=$form->get('ids')->getData();
+            $societe= $entityManager
+            ->getRepository(Annonces::class)
+            ->find(['ids'=>$ids]);
+            $to=$societe->getEmails();
+            
+
+            $entityManager->flush();
+           
+            
+               $to=$societe->getEmails();
+               $subject="Nouvel Evenement";
+               $twig = $this->container->get('twig');
+                     $html=$twig->render('email/email.html.twig',['evenement'=>$evenement]);
+                 
+                 $mailer->sendEmail($to,$subject,$html);
+            
+            $notifier->send(new Notification('Evenemet ajouté avec succées  ', ['browser']));
+            return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
+        }
+        else{
+            $notifier->send(new Notification('Evenemet exist deja  ', ['browser']));
+            return $this->redirectToRoute('app_evenement_new', [], Response::HTTP_SEE_OTHER);
+
+        }
+    }
+        return $this->renderForm('evenement/new.html.twig', [
+            'evenement' => $evenement,
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/afficherback', name: 'app_evenement_afficherback', methods: ['GET','POST'])]
     public function afficherback(EntityManagerInterface $entityManager ,EvenementRepository $EvenementRepository,Request $request): Response
     {
@@ -93,60 +147,7 @@ if($request->isMethod("POST")){
         return $this->redirectToRoute('app_evenement_afficherback', [], Response::HTTP_SEE_OTHER);
     }
    
-    #[Route('/new', name: 'app_evenement_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,NotifierInterface $notifier, MailerService $mailer ): Response
-    {
-        $evenement = new Evenement();
-        $form = $this->createForm(EvenementType::class, $evenement);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-           
-            $file = $evenement->getImagee();
-            $filename = md5(uniqid()).'.'.$file->guessExtension();
-            $file->move($this->getParameter('uploads'),$filename);
-            $evenement->setImagee($filename);
-
-            
-            $entityManager->persist($evenement);
-            $titre = $form->get('titre')->getData();
-            $evenements = $entityManager
-            ->getRepository(Evenement::class)
-            ->findBy(['titre'=>$titre]);
-            if (empty($evenements)) 
-           {
-            $ids=$form->get('ids')->getData();
-            $societe= $entityManager
-            ->getRepository(Annonces::class)
-            ->find(['ids'=>$ids]);
-            $to=$societe->getEmails();
-            
-
-            $entityManager->flush();
-           
-            
-               $to=$societe->getEmails();
-               $subject="Nouvel Evenement";
-               $twig = $this->container->get('twig');
-                     $html=$twig->render('email/email.html.twig',['evenement'=>$evenement]);
-                 
-                 $mailer->sendEmail($to,$subject,$html);
-            
-            $notifier->send(new Notification('Evenemet ajouté avec succées  ', ['browser']));
-            return $this->redirectToRoute('app_evenement_index', [], Response::HTTP_SEE_OTHER);
-        }
-        else{
-            $notifier->send(new Notification('Evenemet exist deja  ', ['browser']));
-            return $this->redirectToRoute('app_evenement_new', [], Response::HTTP_SEE_OTHER);
-
-        }
-    }
-        return $this->renderForm('evenement/new.html.twig', [
-            'evenement' => $evenement,
-            'form' => $form,
-        ]);
-    }
-
+   
    
     
     #[Route('/', name: 'app_evenement_index', methods: ['GET'])]
@@ -231,5 +232,6 @@ if($request->isMethod("POST")){
         ]);
        
     }
+   
     
 }

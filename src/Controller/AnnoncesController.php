@@ -17,61 +17,6 @@ use Knp\Component\Pager\PaginatorInterface;
 #[Route('/annonces')]
 class AnnoncesController extends AbstractController
 { 
-    #[Route('/statistique', name: 'stats')]
-    public function stat()
-        {
-    
-     $repository = $this->getDoctrine()->getRepository(Annonces::class);
-    $annoncess = $repository->findAll();
-    $em = $this->getDoctrine()->getManager();
-    $data = array();
-    $total=0;
-    foreach ($annoncess as $annonces) {
-        $evenements = $annonces->getEvenements();
-        $num_evenements= count($evenements);
-       
-        $data[] = [$annonces->getNoms(), $num_evenements ];
-        $pieChart = new PieChart();
-    $pieChart->getData()->setArrayToDataTable(
-        array_merge([['Noms', 'Nombre d evenements']], $data)
-    );
-    $pieChart->getOptions()->setTitle('Statistiques sur les evenements');
-    $pieChart->getOptions()->setHeight(1000);
-    $pieChart->getOptions()->setWidth(1400);
-    $pieChart->getOptions()->getTitleTextStyle()->setBold(true);
-    $pieChart->getOptions()->getTitleTextStyle()->setColor('green');
-    $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
-    $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
-    $pieChart->getOptions()->getTitleTextStyle()->setFontSize(30);
-    }
-    return $this->render('stats/stat.html.twig', array('piechart' => $pieChart));
-}
-    
-    #[Route('/show_in_map/{ids}', name: 'app_annonces_map', methods: ['GET'])]
-    public function Map( Annonces $ids,EntityManagerInterface $entityManager ): Response
-    {
-
-        $ids = $entityManager
-            ->getRepository(Annonces::class)->findBy( 
-                ['ids'=>$ids ]
-            );
-        return $this->render('annonces/api_arcgis.html.twig', [
-            'annonces' => $ids,
-        ]);
-    }
-    
-
-    
-    #[Route('/{ids}', name: 'app_annonces_deleteback', methods: ['POST'])]
-    public function deleteback(Request $request,  Annonces $annonce, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$annonce->getIds(), $request->request->get('_token'))) {
-            $entityManager->remove($annonce);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_annonces_back', [], Response::HTTP_SEE_OTHER);
-    }
     #[Route('/afficherback', name: 'app_annonces_back', methods: ['GET','POST'])]
     public function backafficher(EntityManagerInterface $entityManager,AnnoncesRepository $AnnoncesRepository,Request $request): Response
     {
@@ -132,6 +77,62 @@ if($request->isMethod("POST")){
             'annonces' => $annonces,
         ]);
     }
+    #[Route('/statistique', name: 'stats')]
+    public function stat()
+        {
+    
+     $repository = $this->getDoctrine()->getRepository(Annonces::class);
+    $annoncess = $repository->findAll();
+    $em = $this->getDoctrine()->getManager();
+    $data = array();
+    $total=0;
+    foreach ($annoncess as $annonces) {
+        $evenements = $annonces->getEvenements();
+        $num_evenements= count($evenements);
+       
+        $data[] = [$annonces->getNoms(), $num_evenements ];
+        $pieChart = new PieChart();
+    $pieChart->getData()->setArrayToDataTable(
+        array_merge([['Noms', 'Nombre d evenements']], $data)
+    );
+    $pieChart->getOptions()->setTitle('Statistiques sur les evenements');
+    $pieChart->getOptions()->setHeight(1000);
+    $pieChart->getOptions()->setWidth(1400);
+    $pieChart->getOptions()->getTitleTextStyle()->setBold(true);
+    $pieChart->getOptions()->getTitleTextStyle()->setColor('green');
+    $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
+    $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
+    $pieChart->getOptions()->getTitleTextStyle()->setFontSize(30);
+    }
+    return $this->render('stats/stat.html.twig', array('piechart' => $pieChart));
+}
+    
+    #[Route('/show_in_map/{ids}', name: 'app_annonces_map', methods: ['GET'])]
+    public function Map( Annonces $ids,EntityManagerInterface $entityManager ): Response
+    {
+
+        $ids = $entityManager
+            ->getRepository(Annonces::class)->findBy( 
+                ['ids'=>$ids ]
+            );
+        return $this->render('annonces/api_arcgis.html.twig', [
+            'annonces' => $ids,
+        ]);
+    }
+    
+
+    
+    #[Route('/{ids}', name: 'app_annonces_deleteback', methods: ['POST'])]
+    public function deleteback(Request $request,  Annonces $annonce, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$annonce->getIds(), $request->request->get('_token'))) {
+            $entityManager->remove($annonce);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_annonces_back', [], Response::HTTP_SEE_OTHER);
+    }
+   
     #[Route('/', name: 'app_annonces_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, Request $request,PaginatorInterface $paginator): Response
     {

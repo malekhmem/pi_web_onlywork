@@ -11,7 +11,31 @@
     {% endfor %}
 
 
+
     <h1>Evenement index</h1>
+     <ul class="navbar-nav w-100" style="margin-top: 18px;">
+                        <li class="nav-item w-100">
+                            <form name="Search-method" id="Search-method"method="post" class="forms-sample" style="display: flex">
+                                <div class="form-group col-md-5">
+                                    <label style="margin-top: 11px;margin-left: 10px;margin-right: 14px;padding-bottom: 7px;;">Option Recherche</label>
+                                    <select name="optionsearch" class="js-example-basic-single" style="width: 200px;height: 38px; color: white; background-color: #5388FA; border-radius: 4px;text-align: center;border: 2px solid #0090e7;margin-right: 15px;">
+                                        <option value="">Choisi un Critére</option>
+                                        <option value="nomss">Nom </option>
+                                        <option value="titre">Titre</option>
+                                        <option value="description">Description</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-7">
+                                    <div class="input-group">
+                                        <input name="Search" type="text" class="form-control" placeholder="Search Events" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-sm btn-primary" type="Submit ; background-color: #5388FA;">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
@@ -50,29 +74,7 @@
 
                     </div>
 
-                    <ul class="navbar-nav w-100" style="margin-top: 18px;">
-                        <li class="nav-item w-100">
-                            <form name="Search-method" id="Search-method"method="post" class="forms-sample" style="display: flex">
-                                <div class="form-group col-md-5">
-                                    <label style="margin-top: 11px;margin-left: 10px;margin-right: 14px;padding-bottom: 7px;;">Option Recherche</label>
-                                    <select name="optionsearch" class="js-example-basic-single" style="width: 200px;height: 38px; color: white; background-color: #5388FA; border-radius: 4px;text-align: center;border: 2px solid #0090e7;margin-right: 15px;">
-                                        <option value="">Choisi un Critére</option>
-                                        <option value="nomss">Nom </option>
-                                        <option value="titre">Titre</option>
-                                        <option value="description">Description</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-7">
-                                    <div class="input-group">
-                                        <input name="Search" type="text" class="form-control" placeholder="Search Events" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-sm btn-primary" type="Submit ; background-color: #5388FA;">Search</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </li>
-                    </ul>
+                   
     <table class="table">
         <thead>
             <tr>
@@ -88,11 +90,14 @@
             </tr>
         </thead>
         <tbody>
+
          <tbody id="myTable">
         <div class="input-group custom-search-form">
         <div class="search-box">
     <button class="btn-search"><i class="fas fa-search"></i></button>
-    <input type="text" name="search" id="search" class="input-search" placeholder="Type to Search...">
+             <input type="text" name="search" id="search" class="input-search" placeholder="Type to Search..." style=" width:1600px; height:50px; ">
+            {#<input type="search" id="search" class="input-search" placeholder="Search "/>#}
+
     
   </div>    
 </div>
@@ -118,5 +123,4 @@
         {% endfor %}
         </tbody>
     </table>
-
 {% endblock %}
