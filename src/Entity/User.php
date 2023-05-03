@@ -10,6 +10,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+/**
+ * User
+ *
+ * @ORM\Table(name="user")
+ * @ORM\Entity
+ */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {   
     #[ORM\Column(length: 255)]
@@ -38,14 +44,25 @@ private ?string $lastName = null;
 private ?string $phoneNumber = null;
 
 #[ORM\Column(length: 255)]
+ /**
+     * @ORM\Column(type="string", length=255)
+     */
 private ?string $role = null;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+      /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
     private ?string $email = null;
 
     #[ORM\Column]
@@ -55,6 +72,9 @@ private ?string $role = null;
      * @var string The hashed password
      */
     #[ORM\Column]
+     /**
+     * @ORM\Column(type="string", length=255)
+     */
     private ?string $password = null;
 
     
@@ -183,10 +203,10 @@ public function setRole(?string $role): self
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
+    public function getPassword(): ?string
+{
+    return $this->password ?: '';
+}
 
     public function setPassword(string $password): self
     {

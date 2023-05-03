@@ -1,0 +1,47 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Poste{% endblock %}
+
+{% block body %}
+    <h1>Poste</h1>
+
+    <table class="table">
+        <tbody>
+           {# <tr>
+                <th>Idp</th>
+                <td>{{ poste.idp }}</td>
+            </tr>#}
+            <tr>
+                <th>Nomp</th>
+                <td>{{ poste.nomp }}</td>
+            </tr>
+            <tr>
+                <th>Domaine</th>
+                <td>{{ poste.domaine }}</td>
+            </tr>
+            <tr>
+                <th>Descp</th>
+                <td>{{ poste.descp }}</td>
+            </tr>
+            <tr>
+                <th>Emailp</th>
+                <td>{{ poste.emailp }}</td>
+            </tr>
+             <tr>
+                <th>nom categorie</th>
+                <td>{{ poste.idcc }}</td>
+            </tr>
+        </tbody>
+    </table>
+<button style=" vbwidth:15% ;height:40px;color:white">
+			<a href="{{ path('generator_service' , {'idp': poste.idp})}}" >
+				Imprimer en pdf
+			</a>
+		</button>
+    <a href="{{ path('app_poste_index') }}">back to list</a>
+
+    <a href="{{ path('app_poste_edit', {'idp': poste.idp}) }}">edit</a>
+    
+
+    {{ include('poste/_delete_form.html.twig') }}
+{% endblock %}

@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ONLYWORK</title>
-    <link href="{{asset('assettB/img/rr.png')}}" rel="icon">
+    <title>ONLY WORK</title>
+    <link href="{{asset('assettB/img/logo.png')}}" rel="icon">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -40,39 +40,33 @@
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
                 <a href="index.html" class="navbar-brand mx-4 mb-3">
-                <h3 class="text-primary"> <img class="rounded-circle" src="{{asset('assettB/img/logo.png')}}" alt="" style="width: 60px; height: 60px;"></i>ONLYWORK</h3>
+                <h3 class="text-primary"> <img class="rounded-circle" src="{{asset('assettB/img/logo.png')}}" alt="" style="width: 40px; height: 40px;"></i>ONLY WORK</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                       <img class="rounded-circle" src="{{asset('assettB/img/damino.jpg')}}" alt="" style="width: 40px; height: 40px;">
-
+                        <img class="rounded-circle" src="{{asset('assettB/img/zeinebbenkhalifa.jpg')}}" alt="" style="width: 40px; height: 40px;">
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
                     
-                        <span>Amine bouchrit</span>
+                        <span>Admin Only work</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
                     <div class="nav-item dropdown">
-                        {#<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>les tables </a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Tables</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="{{path('app_evenement_afficherback')}}" class="dropdown-item">Table Evenement</a>
-                             <a href="{{path('app_annonces_back')}}" class="dropdown-item">Table Annonces societes</a>
-                             <a href="{{path('app_evenement_afficherback')}}" class="dropdown-item">Table Fournisseur</a>
-                             <a href="{{path('app_evenement_afficherback')}}" class="dropdown-item">Table Annonces fournisseurs</a>
-                            <a href="{{path('app_evenement_afficherback')}}" class="dropdown-item">Table categorie</a>
-                            <a href="{{path('app_evenement_afficherback')}}" class="dropdown-item">Table Blacklist</a>
-#}
-
-
-
-
-
-
-
+                            <a href="{{path('app_poste_afficherback')}}" class="dropdown-item">Table postes</a>
+                            <a href="{{path('app_categorie_index')}}" class="dropdown-item">Table categories</a>
+                            <a href="{{path('app_annoncef_afficherback')}}" class="dropdown-item">Table annonce fournisseur</a>
+                            <a href="{{path('app_materiel_afficherback')}}" class="dropdown-item">Table materiel</a> 
+                             <a href="{{path('app_reclamation_index')}}" class="dropdown-item">Table reclamation</a> 
+                             <a href="{{path('app_blackliste_index')}}" class="dropdown-item">Table blackliste</a> 
                         </div>
+                             <a href="{{path('app_poste_index')}}" class="nav-link dropdown-toggle" ><i class="fa fa-laptop me-2 "></i>FRONT</a>
+                             <a href="{{path('stats_categorie')}}" class="nav-link dropdown-toggle" ><i class="fa fa-laptop me-2 "></i>Statistiques</a>
                     </div>
+
                 </div>
             </nav>
         </div>
@@ -87,10 +81,13 @@
     mywindow.document.write('<h1>' + document.title  + '</h1>');
     mywindow.document.write(document.getElementById('affichage').innerHTML);
     mywindow.document.write('</body></html>');
+
     mywindow.document.close(); // necessary for IE >= 10
     mywindow.focus(); // necessary for IE >= 10*/
+
     mywindow.print();
     mywindow.close();
+
     return true;
 }
     </script>
@@ -148,13 +145,10 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
-
+                            <span class="d-none d-lg-inline-flex">Notification</span>
                         </a>
-
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">
-
                                 <h6 class="fw-normal mb-0">Profile updated</h6>
                                 <small>15 minutes ago</small>
                             </a>
@@ -174,15 +168,11 @@
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="{{asset('assettB/img/damino.jpg')}}" alt="" style="width: 40px; height: 40px;">
-                                                 <span class="d-none d-lg-inline-flex">Amine bouchrit</span>
+                            <img class="rounded-circle me-lg-2" src="{{asset('assettB/img/zeinebbenkhalifa.jpg')}}" alt="" style="width: 40px; height: 40px;">
 
                    
                         </a>
-
-                        
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-
                             <a href="#" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
                         </div>
@@ -197,7 +187,7 @@
                 <div class="bg-light rounded-top p-4">
                     <div class="row">
                         <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">ONLYWORK</a>, All Right Reserved. 
+                            &copy; <a href="#">ONLY WORK</a>, All Right Reserved. 
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end">
                             <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
@@ -227,16 +217,7 @@
     <script src="{{asset('assettB/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>*
 
-  <script>
-$(document).ready(function(){
-  $("#search").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-</script>
+  
 
     <!-- Template Javascript -->
     <script src="{{asset('assettB/js/main.js')}}"></script>
