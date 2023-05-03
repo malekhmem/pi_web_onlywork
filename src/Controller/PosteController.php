@@ -280,7 +280,7 @@ class PosteController extends AbstractController
         $dompdf = new Dompdf();
 
         // Récupérer la vue Twig pour le produit
-        $html = $this->renderView('pdf.html.twig', [
+        $html = $this->renderView('pdfz.html.twig', [
             'poste' => $poste
         ]);
 

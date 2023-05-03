@@ -1,85 +1,72 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <title>PDF</title>
     <style>
-      body {
-        background-color: #4e4b6a; /* Add a custom background color */
-        font-family: Arial, sans-serif; /* Set a custom font family */
-      }
-
-      h1 {
-        color: #fff; /* Add a custom text color */
-        text-align: center; /* Center the text */
-        margin-top: 50px; /* Add some top margin */
-      }
-
-      .poste-container {
-        width: 80%;
-        margin: 0 auto; /* Center the container */
+      .container {
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: center;
-        background-color: #fff;
+        align-items: center;
+        font-family: sans-serif;
+        background-color: #f7f7f7;
         padding: 50px;
-        border-radius: 20px;
-        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
       }
+        h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    text-align: center;
+  }
 
-      .poste-item {
-        margin-bottom: 20px;
-        text-align: center;
-      }
+  .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    margin-bottom: 20px;
+  }
 
-      .poste-label {
-        font-size: 18px;
-        color: #4e4b6a;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
+  .label {
+    font-weight: bold;
+    margin-right: 10px;
+    flex-basis: 30%;
+  }
 
-      .poste-value {
-        font-size: 16px;
-        color: #4e4b6a;
-      }
+  .value {
+    flex-basis: 70%;
+  }
 
-      .btn {
-        background-color: #fff;
-        color: #4e4b6a;
-        padding: 10px 15px;
-        border-radius: 5px;
-        text-decoration: none;
-        display: inline-block;
-        margin-top: 20px;
-        transition: background-color 0.3s ease;
-        border: 2px solid #fff;
-      }
-
-      .btn:hover {
-        background-color: #4e4b6a;
-        color: #fff;
-        border: 2px solid #4e4b6a;
-      }
-    </style>
-  </head>
+  .separator {
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 20px;
+    width: 80%;
+  }
+</style>
+ </head>
   <body>
-    <h1>{% block title %}poste{% endblock %}</h1>
-    <div class="poste-container">
-      <div class="poste-item">
-        <div class="poste-label">Nom</div>
-        <div class="poste-value">{{ poste.getNomp() }}</div>
+    <div class="container">
+      <h1>Annonce</h1>
+      <div class="separator"></div>
+      <div class="row">
+        <div class="label">Nom:</div>
+        <div class="value">{{ annoncef.getNomf() }}</div>
       </div>
-      <div class="poste-item">
-        <div class="poste-label">Domaine</div>
-        <div class="poste-value">{{ poste.getDomaine() }}</div>
+      <div class="separator"></div>
+      <div class="row">
+        <div class="label">Adresse:</div>
+        <div class="value">{{ annoncef.getAdresse() }}</div>
       </div>
-      <div class="poste-item">
-        <div class="poste-label">Email</div>
-        <div class="poste-value">{{ poste.getEmailp() }}</div>
+      <div class="separator"></div>
+      <div class="row">
+        <div class="label">Description:</div>
+        <div class="value">{{ annoncef.getDescf() }}</div>
       </div>
-      <div class="poste-item">
-        <div class="poste-label">Description</div>
-        <div class="poste-value">{{ poste.getDescp() }}</div>
+      <div class="separator"></div>
+      <div class="row">
+        <div class="label">Email:</div>
+        <div class="value">{{ annoncef.getEmailf() }}</div>
       </div>
     </div>
   </body>

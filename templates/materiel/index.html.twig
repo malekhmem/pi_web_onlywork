@@ -1,0 +1,91 @@
+{% extends 'front.html.twig' %}
+
+{% block title %} =Materiel {% endblock %}
+
+{% block body %}
+
+ <div class="service">
+        <div class="container">
+       
+            <div class="section-header text-center">
+            <div id="google_translate_element"></div>
+            <h4 style="margin-top:50px; margin-bottom:50px;">Liste des materiels</h4>
+            </div>
+                       <input name="search" type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..."/>
+            <div class="row" id="search-results">
+
+        {% for materiel in materiel %}
+          <div class="col-lg-4 col-md-6 mb-4">
+         <div class="service-item">
+
+                <center><h2>{{ materiel.nomm }}</h2></center>
+                <center><p><strong style="color:#696969">{{ materiel.marque }}</p></center>
+                <center><p><strong style="color:#696969">{{ materiel.prix }}</p></center>
+                
+                {# <td>{{ materiel.image }}</td> #}
+                <center><p><img src="{{ asset('img/'~ materiel.image ) }}" width="50%" height="50%"></p></center>
+                                <td>
+                  <center> <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_materiel_show', {'idm': materiel.idm}) }}'">Show</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_materiel_edit', {'idm': materiel.idm}) }}'">Edit</button></center>
+
+                </td>
+                  <br>
+         <br>
+         {# -------------------------- Share ------------------------------------  #}
+         <div class="sharethis-inline-share-buttons"></div>
+         {# -------------------------- Share ------------------------------------  #}
+
+        </div>
+      </div>
+            
+        {% else %}
+ <div class="col">
+        <p class="text-center">Aucun materiel trouvé.</p>
+      </div>
+
+        {% endfor %}
+            </div>
+
+        </div>
+    </div>
+    <br>
+
+ <center> <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_materiel_new') }}'">Create new</button>
+
+    {% for message in app.flashes('info') %}
+        <div class="alert alert-success">
+        {{message}}
+    {% endfor %}
+<br>
+<br>
+<br>
+ <script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
+    }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+    {{ knp_pagination_render(materiel) }}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+        $(function () {
+$('input[name="search"]').keyup(function () {
+var searchValue = $(this).val();
+$.ajax({
+type: 'POST',
+url: '{{ path('app_materiel_search') }}',
+data: {
+'search': searchValue
+},
+success: function (data) {
+$('#search-results').html(data.html);
+}
+});
+});
+});
+    </script>
+
+{% endblock %}

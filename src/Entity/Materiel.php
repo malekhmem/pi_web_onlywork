@@ -4,12 +4,13 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert; 
 /**
  * Materiel
  *
  * @ORM\Table(name="materiel", indexes={@ORM\Index(name="fk_mat", columns={"idff"}), @ORM\Index(name="fk_uu", columns={"idu"})})
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\MaterielRepository")
  */
 class Materiel
 {
@@ -20,6 +21,7 @@ class Materiel
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    
     private $idm;
 
     /**
@@ -27,6 +29,9 @@ class Materiel
      *
      * @ORM\Column(name="nomm", type="string", length=255, nullable=false)
      */
+    #[Assert\Length(min:2)]
+    #[Assert\Length(max:25)]
+    #[Assert\NotBlank (message:"veuillez saisir le nom de materiel ")]
     private $nomm;
 
     /**
@@ -34,6 +39,9 @@ class Materiel
      *
      * @ORM\Column(name="marque", type="string", length=255, nullable=false)
      */
+    #[Assert\Length(min:2)]
+    #[Assert\Length(max:25)]
+    #[Assert\NotBlank (message:"veuillez saisir la marque de l'annonce ")]
     private $marque;
 
     /**
@@ -41,6 +49,10 @@ class Materiel
      *
      * @ORM\Column(name="prix", type="string", length=255, nullable=false)
      */
+    #[Assert\Length(min:2)]
+    #[Assert\Length(max:25)]
+    #[Assert\Regex(pattern: '/^\d+$/', message: 'Le prix doit contenir uniquement des chiffres')]
+    #[Assert\NotBlank (message:"veuillez saisir le prix")]
     private $prix;
 
     /**
@@ -48,6 +60,9 @@ class Materiel
      *
      * @ORM\Column(name="descm", type="text", length=65535, nullable=false)
      */
+    #[Assert\Length(min:5)]
+    #[Assert\Length(max:100)]
+    #[Assert\NotBlank (message:"veuillez saisir la description ")]
     private $descm;
 
     /**

@@ -1,0 +1,18 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Edit Materiel{% endblock %}
+
+{% block body %}
+<section class="is-hero-bar">
+		<div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+			<h1 class="title">Edit Materiel</h1>
+		</div>
+	</section>
+    
+
+    {{ include('materiel/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_materiel_index') }}">back to list</a>
+
+    {{ include('materiel/_delete_form.html.twig') }}
+{% endblock %}
