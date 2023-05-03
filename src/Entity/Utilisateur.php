@@ -1,53 +1,81 @@
 <?php
 
 namespace App\Entity;
-use Symfony\Component\Validator\Constraints as Assert;
-use App\Repository\UsersRepository;
+
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UsersRepository::class)]
-class Users
+/**
+ * Utilisateur
+ *
+ * @ORM\Table(name="utilisateur")
+ * @ORM\Entity
+ */
+class Utilisateur
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $login = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $password = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $prenom = null;
-
-    #[ORM\Column(length: 255)]
-
-     /**
-     * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\NotBlank(message="Email should not be blank")
-     * @Assert\Email(message="Invalid email address")
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private ?string $email = null;
+    private $id;
 
-    #[ORM\Column(length: 11)]
-
- /**
-     * @ORM\Column(type="integer", length=11, unique=true)
-     * @Assert\NotBlank(message="Numéro de téléphone should not be blank")
-     * @Assert\Regex(pattern="/^[0-9]{8}$/", message="Numéro de téléphone should contain 8 numbers")
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="login", type="string", length=255, nullable=false)
      */
-    private ?int $num_tel = null;
+    private $login;
 
-    #[ORM\Column(length: 255)]
-    private ?string $role = null;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=255, nullable=false)
+     */
+    private $password;
 
-    #[ORM\Column(length: 255)]
-    private ?string $etat = null;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom", type="string", length=255, nullable=false)
+     */
+    private $nom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="prenom", type="string", length=255, nullable=false)
+     */
+    private $prenom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="num_tel", type="integer", nullable=false)
+     */
+    private $numTel;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="role", type="string", length=255, nullable=false)
+     */
+    private $role;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="etat", type="string", length=255, nullable=false)
+     */
+    private $etat;
 
     public function getId(): ?int
     {
@@ -116,12 +144,12 @@ class Users
 
     public function getNumTel(): ?int
     {
-        return $this->num_tel;
+        return $this->numTel;
     }
 
-    public function setNumTel(int $num_tel): self
+    public function setNumTel(int $numTel): self
     {
-        $this->num_tel = $num_tel;
+        $this->numTel = $numTel;
 
         return $this;
     }
@@ -148,5 +176,10 @@ class Users
         $this->etat = $etat;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->nom;
     }
 }

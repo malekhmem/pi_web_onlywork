@@ -1,0 +1,26 @@
+ {% for poste in postes %}
+           <div class="col-lg-4 col-md-6 mb-4">
+        <div class="service-item">
+                {#<td>{{ poste.idp }}</td>#}
+                <center> <h2>{{ poste.nomp }}</h2> </center>
+                <center><p><strong style="color:#0696969">{{ poste.domaine }}</p></center>
+        
+                <center><p><strong style="color:#0696969">{{ poste.emailp }}</p></center>
+                <td>
+                    <center><button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_poste_show', {'idp': poste.idp}) }}'">show</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_poste_edit', {'idp': poste.idp}) }}'">edit</button>
+                   <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_poste_qr', {'idp': poste.idp}) }}'">code qr</button></center>
+                </td>
+             <br>
+         <br>
+         {# -------------------------- Share ------------------------------------  #}
+         <div class="sharethis-inline-share-buttons"></div>
+         {# -------------------------- Share ------------------------------------  #}
+
+        </div>
+      </div>
+        {% else %}
+             <div class="col">
+        <p class="text-center">Aucun poste trouvé.</p>
+      </div>
+        {% endfor %}

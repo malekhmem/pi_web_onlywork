@@ -14,6 +14,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use App\Entity\Poste;
+use App\Entity\Categorie;
+use App\Entity\User;
 
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -45,11 +48,26 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-
-        // For example:
-         return new RedirectResponse($this->urlGenerator->generate('app_home'));
-        //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        
+        $user = $token->getUser();
+        $role = $user->getRole();
+        
+        // Rediriger l'utilisateur en fonction de son rôle
+        if ($role === 'prestataire') {
+            return new RedirectResponse($this->urlGenerator->generate('app_poste_index'));
+        } elseif ($role === 'fournisseur') {
+            return new RedirectResponse($this->urlGenerator->generate('app_materiel_index'));
+        } elseif ($role === 'societe') {
+            return new RedirectResponse($this->urlGenerator->generate('app_annonces_index'));
+        } else {
+            return new RedirectResponse($this->urlGenerator->generate('app_admin_user_index')); // rediriger l'utilisateur vers la page d'accueil par défaut
+        }
     }
+    
+
+     
+        //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+    
 
     protected function getLoginUrl(Request $request): string
     {

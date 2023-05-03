@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>PDF</title>
+    <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: sans-serif;
+        background-color: #f7f7f7;
+        padding: 50px;
+      }
+        h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    margin-bottom: 20px;
+  }
+
+  .label {
+    font-weight: bold;
+    margin-right: 10px;
+    flex-basis: 30%;
+  }
+
+  .value {
+    flex-basis: 70%;
+  }
+
+  .separator {
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 20px;
+    width: 80%;
+  }
+</style>
+ </head>
+  <body>
+    <div class="container">
+      <h1>Annonce</h1>
+      <div class="separator"></div>
+      <div class="row">
+        <div class="label">Nom:</div>
+        <div class="value">{{ annoncef.getNomf() }}</div>
+      </div>
+      <div class="separator"></div>
+      <div class="row">
+        <div class="label">Adresse:</div>
+        <div class="value">{{ annoncef.getAdresse() }}</div>
+      </div>
+      <div class="separator"></div>
+      <div class="row">
+        <div class="label">Description:</div>
+        <div class="value">{{ annoncef.getDescf() }}</div>
+      </div>
+      <div class="separator"></div>
+      <div class="row">
+        <div class="label">Email:</div>
+        <div class="value">{{ annoncef.getEmailf() }}</div>
+      </div>
+    </div>
+  </body>
+</html>

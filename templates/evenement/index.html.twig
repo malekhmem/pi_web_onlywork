@@ -1,20 +1,159 @@
-{% extends 'base.html.twig' %}
+{% extends 'front.html.twig' %}
 
-{% block title %}Hello EvenementController!{% endblock %}
+
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/xampp/htdocs/pi_web_onlywork-evenement_societe/pi_web_onlywork-evenement_societe/src/Controller/EvenementController.php'|file_link(0) }}">src/Controller/EvenementController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/xampp/htdocs/pi_web_onlywork-evenement_societe/pi_web_onlywork-evenement_societe/templates/evenement/index.html.twig'|file_link(0) }}">templates/evenement/index.html.twig</a></code></li>
-    </ul>
-</div>
+
+
+{% for message in app.flashes('notification') %}
+        <div class="alert alert-info alert-dismissible fade show" style="background-color:#a94442;">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    {% endfor %}
+    <div class="service">
+        <div class="container">
+            <div class="section-header text-center">
+              <div id="google_translate_element"></div>
+
+                <h4 style="margin-top:50px; margin-bottom:50px;">Liste des Evenements</h4>
+            </div>
+            <div class="row">
+
+           {% for evenement in evenements %}
+        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="service-item">
+          <td><img src="{{ asset('uploads/' ~evenement.imagee) }}" style=" width:350px; height:350px;border-radius:16px;box-shadow: 0 10px 16px 0 rgba(0,0,0,0.5), 0 6px 20px 0 rgba(0,0,0,0.5);" alt=""/></td>
+          <center><h2>{{ evenement.titre }}</h2></center>
+          <p><strong style="color:#696969"> Description:</strong> {{ evenement.description }}</p>
+          <p><strong style="color:#696969" >Nom societe:</strong> {{ evenement.ids.noms }}</p>
+          <p><strong style="color:#696969">Date de l'evenement:</strong> {{ evenement.datee ? evenement.datee|date('Y-m-d') : '' }}</p>
+ <td>
+                    {#<a href="{{ path('app_evenement_show', {'ide': evenement.ide}) }}">show</a>
+                    <a href="{{ path('app_evenement_edit', {'ide': evenement.ide}) }}">edit</a>#}
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_show', {'ide': evenement.ide}) }}'"class = "btn btn-primary px-3 py-1">Show</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_edit', {'ide': evenement.ide}) }}'"class = "btn btn-primary px-3 py-1">Edit</button>
+                    <td><a href="{{ path('app_qr_cod', {'id': evenement.ide}) }}" class="btn btn-primary px-3 py-1"class = "btn btn-primary px-3 py-1">qr code</a></td>
+
+
+                </td>
+         <br>
+         <br>
+         {# -------------------------- Share ------------------------------------  #}
+         <div class="sharethis-inline-share-buttons"></div>
+         {# -------------------------- Share ------------------------------------  #}
+
+        </div>
+      </div>
+      {% else %}
+      <div class="col">
+        <p class="text-center">Aucun événement trouvé.</p>
+      </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+    <br>
+    
+ {#<a href="{{ path('app_evenement_new') }}">Create new</a>
+  <a href="{{ path('generator_service') }}"> PDF</a>#}
+  <button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_new') }}'">Create new</button>
+<button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('generator_servicee') }}'">PDF</button>
+
+<br>
+<br>
+<br>
+ 
+
+<div  style="margin-left: 526px;" >
+        <style>
+ .pagination {
+    height: 40px;
+    margin: 20px 10px;
+}
+
+.pagination ul {
+    display: inline-block;
+    *display: inline;
+    margin-bottom: 0;
+    margin-left: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    *zoom: 1;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 0px;
+}
+
+.pagination li {
+    display: inline;
+}
+
+.pagination a,
+.pagination span {
+    float: left;
+    padding: 0 14px;
+    line-height: 38px;
+    text-decoration: none;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-left-width: 0;
+}
+
+.pagination a:hover,
+.pagination .active a,
+.pagination .active span {
+    background-color: #f5f5f5;
+}
+
+.pagination .active a,
+.pagination .active span {
+    color: #999999;
+    cursor: default;
+}
+
+.pagination .disabled span,
+.pagination .disabled a,
+.pagination .disabled a:hover {
+    color: #999999;
+    cursor: default;
+    background-color: transparent;
+}
+
+.pagination li:first-child a,
+.pagination li:first-child span {
+    border-left-width: 1px;
+    -webkit-border-radius: 3px 0 0 3px;
+    -moz-border-radius: 3px 0 0 3px;
+    border-radius: 3px 0 0 3px;
+}
+
+.pagination li:last-child a,
+.pagination li:last-child span {
+    -webkit-border-radius: 0 3px 3px 0;
+    -moz-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
+}
+
+.pagination-centered {
+    text-align: center;
+}
+
+.pagination-right {
+    text-align: right;
+}
+ </style>
+                                {{knp_pagination_render(evenements) }}
+                    
+                                     </div>
+
+{#<center><div class="btn px-10 py-10" {{knp_pagination_render(evenements) }} </div></center>#}
+
 {% endblock %}

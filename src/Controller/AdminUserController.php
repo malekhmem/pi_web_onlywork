@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
+
 #[Route('/admin/user')]
 class AdminUserController extends AbstractController
 {
@@ -20,7 +21,18 @@ class AdminUserController extends AbstractController
     
     {
         $users = $userRepository->findAll();
+        $pagination = $paginator->paginate(
+            $users,
+            $request->query->getInt('page', 1),
+            3
+        );
     
+        // le code suivant a été déplacé dans la vue pour gérer la recherche et le tri
+        // car il n'est pas lié à la pagination
+    
+        return $this->render('admin_user/index.html.twig', [
+            'users' => $pagination,
+        ]);
             /////////
 $back = null;
         

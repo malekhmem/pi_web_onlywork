@@ -1,0 +1,126 @@
+{% extends 'back.html.twig' %}
+
+{% block title %}Evenement index{% endblock %}
+
+{% block body %}
+{% for message in app.flashes('notification') %}
+        <div class="alert alert-info alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    {% endfor %}
+
+
+
+    <h1>Evenement index</h1>
+     <ul class="navbar-nav w-100" style="margin-top: 18px;">
+                        <li class="nav-item w-100">
+                            <form name="Search-method" id="Search-method"method="post" class="forms-sample" style="display: flex">
+                                <div class="form-group col-md-5">
+                                    <label style="margin-top: 11px;margin-left: 10px;margin-right: 14px;padding-bottom: 7px;;">Option Recherche</label>
+                                    <select name="optionsearch" class="js-example-basic-single" style="width: 200px;height: 38px; color: white; background-color: #5388FA; border-radius: 4px;text-align: center;border: 2px solid #0090e7;margin-right: 15px;">
+                                        <option value="">Choisi un Critére</option>
+                                        <option value="nomss">Nom </option>
+                                        <option value="titre">Titre</option>
+                                        <option value="description">Description</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-7">
+                                    <div class="input-group">
+                                        <input name="Search" type="text" class="form-control" placeholder="Search Events" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-sm btn-primary" type="Submit ; background-color: #5388FA;">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                </ol>
+            </nav>
+        </div>
+    <div class="row ">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <div class="col-md-5">
+                        </div>
+                        <form method="post" class="forms-sample" style="margin-left: -42px" >
+                            <div class="form-group col-md-4" style="display: flex; width: 100%!important; margin: 0px!important;">
+
+                                <div class="form-check">
+                                    <label class="form-check-label" style="width: 92px;margin-left: -2px;margin-right: 10px;">
+                                        <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="nomss">Nom</label>
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-check-label" style="width: 86px;margin-left: -2px;margin-right: 10px;">
+                                        <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="titre" >Titre</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <label class="form-check-label" style="width: 86px;margin-left: -2px;margin-right: 10px;">
+                                        <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" value="description" >Description</label>
+                                </div>
+
+                                <button type="Submit" class="btn btn-success btn-fw" style="margin: auto;background-color: #5388FA; ">Sort</button>
+                            </div>
+                        </form>
+
+                    </div>
+
+                   
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ide</th>
+                <th>Image</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Nomss</th>
+                <th>date</th>
+               {# <th>Nomevenement</th> #}
+
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+         <tbody id="myTable">
+        <div class="input-group custom-search-form">
+        <div class="search-box">
+    <button class="btn-search"><i class="fas fa-search"></i></button>
+             <input type="text" name="search" id="search" class="input-search" placeholder="Type to Search..." style=" width:1000px; height:50px; ">
+            {#<input type="search" id="search" class="input-search" placeholder="Search "/>#}
+
+    
+  </div>    
+</div>
+        {% for evenement in evenements %}
+            <tr>
+                <td>{{ evenement.ide }}</td>
+                <td><img src="{{ asset('uploads/' ~evenement.imagee) }}" style=" width:150px; height:150px; " alt=""/></td>
+                <td>{{ evenement.titre }}</td>
+                <td>{{ evenement.description }}</td>
+                <td>{{ evenement.nomss }}</td>
+                <td> {{ evenement.datee ? evenement.datee|date('Y-m-d') : '' }}</td>
+                {# <td>{{ evenement.ids }}</td>#}
+
+                <td>
+                                          {{ include('evenement/_deletteback_form.html.twig') }}
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
