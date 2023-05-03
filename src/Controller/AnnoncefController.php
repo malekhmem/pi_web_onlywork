@@ -132,7 +132,7 @@ if($request->isMethod("POST")){
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($annoncef);
-            //$annoncefRepository->sms();
+            $annoncefRepository->sms();
             $entityManager->flush();
             $email = $annoncef->getEmailf();
             $mailer = new SendMail();
