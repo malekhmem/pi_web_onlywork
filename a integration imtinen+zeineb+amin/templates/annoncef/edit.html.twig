@@ -1,0 +1,13 @@
+{% extends 'front.html.twig' %}
+
+{% block title %}Edit Annoncef{% endblock %}
+
+{% block body %}
+    <h1>Edit Annoncef</h1>
+
+    {{ include('annoncef/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_annoncef_index') }}">back to list</a>
+
+    {{ include('annoncef/_delete_form.html.twig') }}
+{% endblock %}
