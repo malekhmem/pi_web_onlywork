@@ -18,10 +18,85 @@ use App\Entity\PdfGeneratorService;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Service\MailerService; 
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+
 
 #[Route('/evenement')]
 class EvenementController extends AbstractController
 {
+
+    #[Route("/deleteEventJSON/{idev}", name: "deleteEventJSON")]
+    public function deleteEventJSON(Request $req, $idev, NormalizerInterface $Normalizer)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $evenement = $em->getRepository(Evenement::class)->find($idev);
+        $em->remove($evenement);
+        $em->flush();
+        $jsonContent = $Normalizer->normalize($evenement, 'json', ['groups' => 'Evenement']);
+        return new Response("Event deleted successfully " . json_encode($jsonContent));
+    }
+    
+    #[Route("/Addjson", name: "Addjson")]
+    public function addStudentJSON(Request $req,   NormalizerInterface $Normalizer)
+    {
+    
+        $em = $this->getDoctrine()->getManager();
+        $evenement = new Evenement();
+                $evenement->setTitre($req->get('titre'));
+       // $evenement->setDescription($req->get('description'));
+        //$evenement->setNomss($req->get('nomss'));
+        $em->persist($evenement);
+        $em->flush();
+    
+        $jsonContent = $Normalizer->normalize($evenement, 'json', ['groups' => 'Evenement']);
+        return new Response(json_encode($jsonContent));
+    }
+
+
+    #[Route("/updateEventJSON/{ide}", name: "updateEventJSON")]
+    public function updateEventJSON(Request $req, $ide, NormalizerInterface $Normalizer)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $evenement = $em->getRepository(Evenement::class)->find($ide);
+
+        $evenement->setTitre($req->get('titre'));
+       // $evenement->setDescription($req->get('description'));
+       // $evenement->setNomss($req->get('nomss'));
+        
+
+        $em->flush();
+
+        $jsonContent = $Normalizer->normalize($evenement, 'json', ['groups' => 'Evenement']);
+        return new Response("Event updated successfully " . json_encode($jsonContent));
+    }
+    
+    #[Route("/AllEvenement", name: "list")]
+    //* Dans cette fonction, nous utilisons les services NormlizeInterface et StudentRepository, 
+    //* avec la méthode d'injection de dépendances.
+    public function getStudents(EvenementRepository $repo, SerializerInterface $serializer)
+    {
+        $evenements = $repo->findAll();
+        //* Nous utilisons la fonction normalize qui transforme le tableau d'objets 
+        //* students en  tableau associatif simple.
+        // $studentsNormalises = $normalizer->normalize($students, 'json', ['groups' => "students"]);
+
+        // //* Nous utilisons la fonction json_encode pour transformer un tableau associatif en format JSON
+        // $json = json_encode($studentsNormalises);
+
+        $json = $serializer->serialize($evenements, 'json', ['groups' => "Evenement"]);
+
+        //* Nous renvoyons une réponse Http qui prend en paramètre un tableau en format JSON
+        return new Response($json);
+    }
+
+
+   
+
+
     #[Route('/new', name: 'app_evenement_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,NotifierInterface $notifier, MailerService $mailer ): Response
     {
@@ -75,6 +150,8 @@ class EvenementController extends AbstractController
             'form' => $form,
         ]);
     }
+
+ 
 
     #[Route('/afficherback', name: 'app_evenement_afficherback', methods: ['GET','POST'])]
     public function afficherback(EntityManagerInterface $entityManager ,EvenementRepository $EvenementRepository,Request $request): Response

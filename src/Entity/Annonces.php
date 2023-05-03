@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\SerializerInterface;
+
 
 
 
@@ -21,10 +23,13 @@ class Annonces
     /**
      * @var int
      *
+     * Annonces
      * @ORM\Column(name="ids", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[Groups("Annonces")]
+
     private $ids;
 
     /**
@@ -35,6 +40,9 @@ class Annonces
     #[Assert\Length(min:5)]
     #[Assert\Length(max:30)]
     #[Assert\NotBlank (message:"veuillez saisir le nom ")]
+    #[Groups("Annonces")]
+
+
     private $noms;
 
     /**
@@ -44,6 +52,8 @@ class Annonces
      */
     #[Assert\NotBlank (message:"veuillez saisir l email ")]
     #[Assert\Email]
+    #[Groups("Annonces")]
+
     private $emails;
 
     /**
@@ -54,6 +64,8 @@ class Annonces
     #[Assert\Length(min:6)]
     #[Assert\Length(max:8)]
     #[Assert\NotBlank (message:"veuillez saisir le numero ")]
+    #[Groups("Annonces")]
+
     private $numeros;
 
     /**
@@ -64,6 +76,8 @@ class Annonces
     #[Assert\Length(min:5)]
     #[Assert\Length(max:20)]
     #[Assert\NotBlank (message:"veuillez saisir l addresse ")]
+    #[Groups("Annonces")]
+
     private $adresses;
 
     /**

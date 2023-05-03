@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Annonces;
+use App\Entity\Evenement;
+
 use App\Form\AnnoncesType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,11 +14,26 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\AnnoncesRepository;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 
 #[Route('/annonces')]
 class AnnoncesController extends AbstractController
 { 
+   
+    #[Route("/malek", name: "list")]
+    #ParamConverter("annonces", class="App\Entity\Annonces")
+    public function getjson(EvenementRepository $repo, SerializerInterface $serializer, NormalizerInterface $normalizer)
+    {
+        $annonces = $repo->findAll();
+        $annoncesNormalises = $normalizer->normalize($annonces, 'json', ['groups' => "Annonces"]);
+        $json = $serializer->serialize($annoncesNormalises, 'json');
+    
+        return new Response($json, 200, [
+            'Content-Type' => 'application/json'
+        ]);
+    }
     #[Route('/afficherback', name: 'app_annonces_back', methods: ['GET','POST'])]
     public function backafficher(EntityManagerInterface $entityManager,AnnoncesRepository $AnnoncesRepository,Request $request): Response
     {
@@ -77,6 +94,9 @@ if($request->isMethod("POST")){
             'annonces' => $annonces,
         ]);
     }
+
+    
+
     #[Route('/statistique', name: 'stats')]
     public function stat()
         {
@@ -209,5 +229,6 @@ if($request->isMethod("POST")){
 
         return $this->redirectToRoute('app_annonces_index', [], Response::HTTP_SEE_OTHER);
     }
+   
   
 }

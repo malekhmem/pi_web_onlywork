@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Evenement
@@ -22,6 +24,7 @@ class Evenement
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[Groups("Evenement")]
     private $ide;
 
     /**
@@ -32,6 +35,7 @@ class Evenement
     #[Assert\Length(min:5)]
     #[Assert\Length(max:30)]
     #[Assert\NotBlank (message:"veuillez saisir le titre ")]
+    #[Groups("Evenement")]
     private $titre;
 
     /**
@@ -42,6 +46,7 @@ class Evenement
     #[Assert\Length(min:5)]
     #[Assert\Length(max:200)]
     #[Assert\NotBlank (message:"veuillez saisir le description ")]
+    #[Groups("Evenement")]
     private $description;
 
     /**
@@ -52,6 +57,7 @@ class Evenement
     #[Assert\Length(min:5)]
     #[Assert\Length(max:30)]
     #[Assert\NotBlank (message:"veuillez saisir le nom ")]
+    #[Groups("Evenement")]
     private $nomss;
 
     /**
@@ -60,6 +66,7 @@ class Evenement
      * @ORM\Column(name="datee", type="date", nullable=true)
      */
     #[Assert\GreaterThanOrEqual ("today", message:"La date doit être aujourd'hui ou après.")]
+    #[Groups("Evenement")]
     private $datee;
 
     /**
@@ -68,6 +75,7 @@ class Evenement
      * @ORM\Column(name="imagee", type="string", length=255, nullable=true)
      */
     #[Assert\NotBlank (message:"veuillez saisir le image ")]
+    #[Groups("Evenement")]
     private $imagee;
 
     /**
