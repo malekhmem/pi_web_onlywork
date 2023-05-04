@@ -143,6 +143,26 @@ if($request->isMethod("POST")){
         ]);
     }
 
+    #[Route('/{id}/editfront', name: 'app_admin_user_editfront', methods: ['GET', 'POST'])]
+    public function editfront(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $form->get('plainpassword')->getData();
+            $hashPassword = $passwordHasher->hashPassword($user, $plainPassword);
+            $user->setPassword($hashPassword);
+            $userRepository->save($user, true);
+
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('admin_user/editfront.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
     #[Route('/{id}', name: 'app_admin_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {

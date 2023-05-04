@@ -92,7 +92,10 @@
                     <div class="button navbar-right">
                         <button class="navbar-btn nav-button wow bounceInRight login" onclick=" window.open('../logout')" data-wow-delay="0.4s" href="../logout">Logout</button>
                         <button class="navbar-btn nav-button wow fadeInRight" onclick=" window.open('../register')" data-wow-delay="0.5s">register</button>
-                       
+                         {% if app.user %}
+    <button class="navbar-btn nav-button wow bounceInRight login" onclick="window.open('../admin/user/{{ app.user.id }}/editfront')" data-wow-delay="0.4s" href="{{ path('app_admin_user_editfront', {'id': app.user.id}) }}">Edit Profile</button>
+{% endif %}
+
                     </div>
                     <ul class="main-nav nav navbar-nav navbar-right">
                         <li class="dropdown ymm-sw " data-wow-delay="0.1s">

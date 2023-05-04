@@ -132,7 +132,7 @@ if($request->isMethod("POST")){
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($annoncef);
-           // $annoncefRepository->sms();
+            $annoncefRepository->sms();
             $entityManager->flush();
             $email = $annoncef->getEmailf();
             $mailer = new SendMaill();
@@ -172,7 +172,7 @@ if($request->isMethod("POST")){
         ]);
     }
     
-    #[Route('/pdf/{idf}', name: 'generator_servicee', methods:['GET'])]
+    #[Route('/pdf/{idf}', name: 'generator_serviceee', methods:['GET'])]
     public function generatePdf(annoncef $annoncef)
 {
     // Créer une instance de Dompdf
